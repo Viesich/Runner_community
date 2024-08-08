@@ -1,3 +1,13 @@
 from django.shortcuts import render
 
-# Create your views here.
+from event.models import Event
+
+
+def index(request):
+    events = Event.objects.all()
+    context = {
+        "events": events,
+    }
+    return render(request, 'event/index.html', context)
+
+
