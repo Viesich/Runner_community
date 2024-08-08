@@ -1,31 +1,27 @@
-<!DOCTYPE "html">
-<html lang="en">
-<head>
-  <title>Runners community</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-  <table>
-    <thead>
-    <tr>
-      <th>Date race</th>
-      <th>Name race</th>
-      <th>Location</th>
-      <th>Description</th>
-      <th>Participants</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for event in events %}
+{% extends "base.html" %}
+{% block content %}
+  <body>
+    <table>
+      <thead>
       <tr>
-        <td>{{ event.date }}</td>
-        <td>{{ event.name }}</td>
-        <td>{{ event.location }}</td>
-        <td>{{ event.description }}</td>
-        <td><a href="#">join to event</a></td>
+        <th>Date race</th>
+        <th>Name race</th>
+        <th>Location</th>
+        <th>Description</th>
+        <th>Participants</th>
       </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-</body>
+      </thead>
+      <tbody>
+      {% for event in events %}
+        <tr>
+          <td>{{ event.date }}</td>
+          <td>{{ event.name }}</td>
+          <td>{{ event.location }}</td>
+          <td>{{ event.description }}</td>
+          <td><a href="#">join to event</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </body>
+{% endblock %}
