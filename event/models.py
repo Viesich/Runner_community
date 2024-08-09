@@ -38,7 +38,7 @@ class Event(models.Model):
 class Result(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='results')
     runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='results')
-    time = models.DateTimeField()
+    time = models.TimeField()
     position = models.IntegerField()
 
     def __str__(self):
