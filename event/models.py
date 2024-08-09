@@ -2,6 +2,7 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
+from django.utils import timezone
 
 
 class Runner(AbstractUser):
@@ -12,6 +13,9 @@ class Runner(AbstractUser):
         null=True, blank=True
     )
     phone_number = models.CharField(max_length=15, null=True, blank=True)
+
+    def __str__(self):
+        return self.last_name + " " + self.first_name
 
 
 class Event(models.Model):
@@ -36,13 +40,21 @@ class Event(models.Model):
 
 
 class Result(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='results')
-    runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='results')
+    event_registration = models.ForeignKey(
+        "EventRegistration",
+        on_delete=models.CASCADE,
+        related_name='results',
+    )
     time = models.TimeField()
     position = models.IntegerField()
 
     def __str__(self):
-        return f"{self.position} place {self.runner.last_name} {self.runner.first_name} {self.time}"
+        return (
+            f"{self.position} place "
+            f"{self.event_registration.runner.last_name} "
+            f"{self.event_registration.runner.first_name} "
+            f"{self.time}"
+        )
 
 
 class EventRegistration(models.Model):
@@ -65,20 +77,20 @@ class EventRegistration(models.Model):
     ]
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='events')
-    user = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='users')
+    runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='users')
     registration_date = models.DateTimeField(auto_now_add=True)
     distance = models.IntegerField()
-    status = models.CharField(max_length=100, choices=[("Registered", "Registered"), ("Canceled", "Canceled")])
+    status = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.event.name}"
+        return f"{self.runner.last_name} {self.runner.first_name} - {self.event.name}"
 
     def cancel_registration(self):
-        self.status = "Canceled"
+        self.status = False
         self.save()
 
     def is_active(self):
-        return self.status == "Registered"
+        return self.status
 
     def get_distance_choices(self):
         if self.event.event_type == 'Running':
@@ -91,6 +103,18 @@ class EventRegistration(models.Model):
             return []
 
     def save(self, *args, **kwargs):
+        # Validate distance
         if self.distance not in [choice[0] for choice in self.get_distance_choices()]:
             raise ValueError("Invalid distance for the event type")
+
+        # Check if event date has passed
+        if self.event.date <= timezone.now():
+            raise ValueError("Cannot register for an event that has already passed")
+
+        # Update status based on event date
+        if self.event.date > timezone.now():
+            self.status = True
+        else:
+            self.status = False
+
         super().save(*args, **kwargs)
