@@ -103,15 +103,12 @@ class EventRegistration(models.Model):
             return []
 
     def save(self, *args, **kwargs):
-        # Validate distance
         if self.distance not in [choice[0] for choice in self.get_distance_choices()]:
             raise ValueError("Invalid distance for the event type")
 
-        # Check if event date has passed
         if self.event.date <= timezone.now():
             raise ValueError("Cannot register for an event that has already passed")
 
-        # Update status based on event date
         if self.event.date > timezone.now():
             self.status = True
         else:
