@@ -6,7 +6,7 @@ from event.models import Event, EventRegistration, Result, Runner
 
 @admin.register(Runner)
 class RunnerAdmin(UserAdmin):
-    list_display = ("full_name", "gender", "date_of_birth", "phone_number",) + UserAdmin.list_display[1:]
+    list_display = ("full_name", "username", "gender", "date_of_birth", "phone_number",) + UserAdmin.list_display[1:]
     fieldsets = UserAdmin.fieldsets + (
         (("Additional info", {"fields": ("date_of_birth", "gender", "phone_number",)}),)
     )
