@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-  <body>
-    <table>
-      <thead>
+  <table class="table table-striped table-hover">
+    <thead>
       <tr>
         <th>Date race</th>
         <th>Name race</th>
@@ -10,18 +9,17 @@
         <th>Description</th>
         <th>Participants</th>
       </tr>
-      </thead>
-      <tbody>
+    </thead>
+    <tbody>
       {% for event in events %}
         <tr>
           <td>{{ event.date }}</td>
           <td>{{ event.name }}</td>
           <td>{{ event.location }}</td>
           <td>{{ event.description }}</td>
-          <td><a href="#">join to event</a></td>
+          <td><a href="#">Join to event</a></td>
         </tr>
       {% endfor %}
-      </tbody>
-    </table>
-  </body>
+    </tbody>
+  </table>
 {% endblock %}
