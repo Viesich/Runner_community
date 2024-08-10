@@ -77,7 +77,7 @@ class EventRegistration(models.Model):
     ]
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='events')
-    runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='users')
+    runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='runners')
     registration_date = models.DateTimeField(auto_now_add=True)
     distance = models.IntegerField()
     status = models.BooleanField(default=True)
