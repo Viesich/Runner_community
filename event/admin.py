@@ -1,12 +1,7 @@
-from tkinter import EventType
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from event.models import Event, EventRegistration, Result, Runner
-
-
-admin.site.register(Result)
 
 
 @admin.register(Runner)
@@ -41,13 +36,50 @@ class RunnerAdmin(UserAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ("date", "event_type", )
+    list_display = ("date", "name", "event_type", "location")
     search_fields = ('name',)
     list_filter = ('name', "date", "event_type")
 
 
 @admin.register(EventRegistration)
 class EventRegistrationAdmin(admin.ModelAdmin):
-    list_display = ('event__date', 'event', 'distance', 'runner', )
-    search_fields = ('runner', )
+    list_display = ('event_date', 'event', 'distance', 'runner',)
+    search_fields = ('runner__last_name', 'runner__first_name', 'event__name')
     list_filter = ('event__date', 'event', 'distance')
+
+    def event_date(self, obj):
+        return obj.event.date
+
+    event_date.short_description = 'Event Date'
+
+    def runner(self, obj):
+        return f"{obj.runner.last_name} {obj.runner.first_name}"
+
+    runner.short_description = 'Runner'
+
+
+@admin.register(Result)
+class ResultAdmin(admin.ModelAdmin):
+    list_display = ('event_name', 'event_date', 'runner_last_name', 'distance', 'time', 'position')
+    search_fields = ('event_registration__runner__last_name', 'event_registration__runner__first_name',)
+    list_filter = ('event_registration__event__date', 'event_registration__event', 'event_registration__distance')
+
+    def event_name(self, obj):
+        return obj.event_registration.event.name
+
+    event_name.short_description = 'Event Name'
+
+    def event_date(self, obj):
+        return obj.event_registration.event.date
+
+    event_date.short_description = 'Event Date'
+
+    def runner_last_name(self, obj):
+        return obj.event_registration.runner.last_name
+
+    runner_last_name.short_description = 'Runner Last Name'
+
+    def distance(self, obj):
+        return obj.event_registration.distance
+
+    distance.short_description = 'Distance'
