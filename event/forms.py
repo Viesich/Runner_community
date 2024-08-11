@@ -11,6 +11,10 @@ class RunnerCreationForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ("first_name", "last_name", "date_of_birth", "gender", "phone_number")
 
 
+class RunnerUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Runner
+        fields = ['first_name', 'last_name', 'date_of_birth', 'gender', 'phone_number']
 # class BookForm(forms.ModelForm):
 #     authors = forms.ModelMultipleChoiceField(
 #         queryset=get_user_model().objects.all(),
