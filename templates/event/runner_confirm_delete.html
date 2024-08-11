@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Delete runner</h1>
+  <p>Are you sure you want to delete the runner: {{ runner }}?</p>
+  <p><i>All Events with this runner will be also deleted!</i></p>
+  <form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Yes, delete" class="btn btn-danger" />
+  </form>
+  <a href="{% url 'events:runner_detail' pk=runner.id %}" class="btn btn-secondary">Cancel</a>
+{% endblock %}

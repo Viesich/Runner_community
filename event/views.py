@@ -50,6 +50,11 @@ class RunnerUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        # Повторна аутентифікація користувача після зміни пароля
         update_session_auth_hash(self.request, self.object)
         return response
+
+
+class RunnerDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Runner
+    template_name = "event/runner_confirm_delete.html"
+    success_url = reverse_lazy("event:index")
