@@ -6,11 +6,12 @@ from django.utils import timezone
 
 
 class Runner(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True)
+    first_name = models.CharField(max_length=30, blank=False)
+    last_name = models.CharField(max_length=30, blank=False)
+    date_of_birth = models.DateField()
     gender = models.CharField(
         max_length=10,
         choices=[('Male', 'Male'), ('Female', 'Female'),],
-        null=True, blank=True
     )
     phone_number = models.CharField(max_length=15, null=True, blank=True)
 
