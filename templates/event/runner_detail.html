@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ runner.first_name }} {{ runner.last_name }}</h1>
+  <p><strong>username: </strong>{{ runner.username }}</p>
+  <p><strong>date of birth: </strong>{{ runner.date_of_birth }}</p>
+  {% if runner.phone_number %}
+    <p><strong>Phone number: </strong>{{ runner.phone_number }}</p>
+  {% endif %}
+  <div class="ml-3">
+    <h3>Events</h3>
+  {% for event in runner.event.all %}
+    <hr>
+    <p class="text-muted">{{ event.id }}</p>
+    <p>{{ event.name }} {{ event.date }} {{ event.location }}
+    </p>
+  {% empty %}
+      <p>Runner hasn't event</p>
+  {% endfor %}
+  
+  <a href="{% url "event:runner_update" pk=runner.id %}">Update</a>
+    </div>
+{% endblock %}
+
