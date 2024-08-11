@@ -1,5 +1,6 @@
 from unittest import runner
 
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -46,3 +47,9 @@ class RunnerUpdateView(LoginRequiredMixin, generic.UpdateView):
         if obj != self.request.user:
             raise PermissionDenied
         return obj
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Повторна аутентифікація користувача після зміни пароля
+        update_session_auth_hash(self.request, self.object)
+        return response
