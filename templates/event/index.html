@@ -13,9 +13,12 @@
         <th>Name race</th>
         <th>Location</th>
         <th>Description</th>
-        <th>Participants</th>
+        {% if not user.is_staff %}
+          <th>Participants</th>
+        {% endif %}
         {% if user.is_staff %}
           <th>Update</th>
+          <th>Delete</th>
         {% endif %}
       </tr>
     </thead>
@@ -26,9 +29,12 @@
           <td>{{ event.name }}</td>
           <td>{{ event.location }}</td>
           <td>{{ event.description }}</td>
-          <td><a href="#">Join to event</a></td>
+          {% if not user.is_staff %}
+            <td><a href="#" class="btn btn-primary">Join to event</a></td>
+          {% endif %}
           {% if user.is_staff %}
-            <td><a href="{% url 'event:event_update' pk=event.pk%}">Update</a></td>
+            <td><a href="{% url 'event:event_update' pk=event.pk%}" class="btn btn-primary">Update</a></td>
+            <td><a href="{% url 'event:event_delete' pk=event.pk%}" class="btn btn-danger">Delete</a></td>
           {% endif %}
         </tr>
       {% endfor %}

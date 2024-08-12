@@ -35,6 +35,12 @@ class EventUpdateView(LoginRequiredMixin, generic.UpdateView):
     success_url = reverse_lazy('event:index')
 
 
+class EventDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Event
+    template_name = 'event/event_confirm_delete.html'
+    success_url = reverse_lazy('event:index')
+
+
 class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
     model = Runner
     context_object_name = 'runner'
