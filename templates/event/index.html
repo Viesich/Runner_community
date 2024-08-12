@@ -13,6 +13,7 @@
         <th>Name race</th>
         <th>Location</th>
         <th>Description</th>
+        <th>Organiser</th>
         {% if not user.is_staff %}
           <th>Participants</th>
         {% endif %}
@@ -29,6 +30,7 @@
           <td>{{ event.name }}</td>
           <td>{{ event.location }}</td>
           <td>{{ event.description }}</td>
+          <td>{{ event.organiser }}</td>
           {% if not user.is_staff %}
             <td><a href="#" class="btn btn-primary">Join to event</a></td>
           {% endif %}

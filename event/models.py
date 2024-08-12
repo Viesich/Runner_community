@@ -31,6 +31,7 @@ class Event(models.Model):
     location = models.CharField(max_length=100)
     description = models.TextField()
     event_type = models.CharField(max_length=100, choices=EVENT_TYPE_CHOICES)
+    organiser = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
 
     class Meta:
