@@ -1,6 +1,6 @@
 <ul class="sidebar-nav list-group">
   {% if user.is_authenticated %}
-    <li class="list-group-item"><a href="{% url 'events:runner_detail' user.pk %}">User: {{ user.username }}</a></li>
+    <li class="list-group-item"><a href="{% url 'events:runner_detail' user.pk %}">Profile {{ user.username }}</a></li>
     <li class="list-group-item">
       <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
@@ -28,6 +28,6 @@
     <a href="#">Swimming</a>
   </li>
   <li class="list-group-item">
-    <a href="#">Our contacts</a>
+    <a href="{% url 'event:registration_list' %}">My registration</a>
   </li>
 </ul>

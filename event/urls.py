@@ -8,7 +8,7 @@ from event.views import (
     RunnerCreateView,
     RunnerUpdateView,
     RunnerDeleteView,
-    EventDeleteView,
+    EventDeleteView, EventRegistrationListView,
 )
 
 app_name = 'event'
@@ -22,4 +22,5 @@ urlpatterns = [
     path("runners/create", RunnerCreateView.as_view(), name="runner_create"),
     path("runners/<int:pk>/update", RunnerUpdateView.as_view(), name="runner_update"),
     path("runners/<int:pk>/delete", RunnerDeleteView.as_view(), name="runner_delete"),
+    path('registrations/', EventRegistrationListView.as_view(), name='registration_list'),
 ]
