@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.views import generic
 
-from event.forms import RunnerCreationForm, RunnerUpdateForm, EventCreationForm
+from event.forms import RunnerCreationForm, RunnerUpdateForm, EventCreationForm, EventSearchForm
 from event.models import Event, Runner
 from django.urls import reverse_lazy, reverse
 
@@ -15,8 +15,17 @@ from django.urls import reverse_lazy, reverse
 @login_required
 def index(request):
     events = Event.objects.all()
+    form = EventSearchForm(request.GET)
+    if form.is_valid():
+        name = form.cleaned_data.get('name', '')
+        location = form.cleaned_data.get('location', '')
+        if name:
+            events = events.filter(name__icontains=name)
+        if location:
+            events = events.filter(location__icontains=location)
     context = {
         "events": events,
+        "search_form": form,
     }
     return render(request, 'event/index.html', context)
 

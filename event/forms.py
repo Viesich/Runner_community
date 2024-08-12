@@ -85,12 +85,18 @@ class EventCreationForm(forms.ModelForm):
         fields = "__all__"
 
 
-#
-# class BookSearchForm(forms.Form):
-#     title = forms.CharField(
-#         max_length=100,
-#         required=True,
-#         label="",
-#         widget=forms.TextInput(
-#             attrs={"placeholder": "Title"}),
-#     )
+class EventSearchForm(forms.Form):
+    name = forms.CharField(
+        max_length=100,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Name"}),
+    )
+    location = forms.CharField(
+        max_length=100,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Location"}),
+    )
