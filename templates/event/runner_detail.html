@@ -9,18 +9,4 @@
     <a href="{% url "event:runner_update" pk=runner.id %}" class="btn btn-primary mr-5">Update</a>
     <a href="{% url "event:runner_delete" pk=runner.id %}" class="btn btn-danger">Delete</a>
   {% endif %}
-  
-  <div class="ml-3">
-    <br>
-    <h3>Events</h3>
-  {% for event in runner.event.all %}
-    <hr>
-    <p class="text-muted">{{ event.id }}</p>
-    <p>{{ event.name }} {{ event.date }} {{ event.location }}
-    </p>
-  {% empty %}
-      <p>Runner hasn't event</p>
-  {% endfor %}
-  
-      </div>
 {% endblock %}
