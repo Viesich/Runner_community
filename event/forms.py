@@ -71,7 +71,7 @@ class RunnerUpdateForm(forms.ModelForm):
         return runner
 
 
-class EventForm(forms.ModelForm):
+class EventCreationForm(forms.ModelForm):
     date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
         label="Start date",
@@ -83,6 +83,7 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = "__all__"
+
 
 #
 # class BookSearchForm(forms.Form):

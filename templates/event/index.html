@@ -14,6 +14,9 @@
         <th>Location</th>
         <th>Description</th>
         <th>Participants</th>
+        {% if user.is_staff %}
+          <th>Update</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -24,6 +27,9 @@
           <td>{{ event.location }}</td>
           <td>{{ event.description }}</td>
           <td><a href="#">Join to event</a></td>
+          {% if user.is_staff %}
+            <td><a href="{% url 'event:event_update' pk=event.pk%}">Update</a></td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>
