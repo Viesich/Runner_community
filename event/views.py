@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.views import generic
 
-from event.forms import RunnerCreationForm, RunnerUpdateForm
+from event.forms import RunnerCreationForm, RunnerUpdateForm, EventForm
 from event.models import Event, Runner
 from django.urls import reverse_lazy, reverse
 
@@ -19,6 +19,13 @@ def index(request):
         "events": events,
     }
     return render(request, 'event/index.html', context)
+
+
+class EventCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'event/event_form.html'
+    success_url = reverse_lazy('event:index')
 
 
 class RunnerDetailView(LoginRequiredMixin, generic.DetailView):

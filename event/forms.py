@@ -6,6 +6,11 @@ from event.models import Runner, Event, Result, EventRegistration
 
 
 class RunnerCreationForm(UserCreationForm):
+    date_of_birth = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="Date of birth",
+    )
+
     class Meta(UserCreationForm.Meta):
         model = Runner
         fields = UserCreationForm.Meta.fields + ("first_name", "last_name", "date_of_birth", "gender", "phone_number")
@@ -65,17 +70,20 @@ class RunnerUpdateForm(forms.ModelForm):
             runner.save()
         return runner
 
-# class BookForm(forms.ModelForm):
-#     authors = forms.ModelMultipleChoiceField(
-#         queryset=get_user_model().objects.all(),
-#         widget=forms.CheckboxSelectMultiple(),
-#         required=False,
-#     )
-#
-#     class Meta:
-#         model = Book
-#         fields = "__all__"
-#
+
+class EventForm(forms.ModelForm):
+    date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="Start date",
+    )
+    location = forms.CharField(
+        label="City, street, starting point",
+    )
+
+    class Meta:
+        model = Event
+        fields = "__all__"
+
 #
 # class BookSearchForm(forms.Form):
 #     title = forms.CharField(
