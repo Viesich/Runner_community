@@ -31,8 +31,8 @@
     <tbody>
       {% for event in events %}
         <tr>
-          <td>{{ event.date | date:"d.m.Y" }}</td>
-          <td><a href="#">{{ event.name }}</a></td>
+          <td>{{ event.start_datetime|date:"d.m.Y, l" }}</td>
+          <td><a href="{% url 'event:event_detail' pk=event.id %}">{{ event.name }}</a></td>
           <td>{{ event.location }}</td>
           <td>{{ event.get_distances|join:", " }}</td>
           <td>{{ event.organiser }}</td>

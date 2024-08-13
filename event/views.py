@@ -33,6 +33,12 @@ def index(request):
     return render(request, 'event/index.html', context)
 
 
+class EventDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Event
+    context_object_name = 'event'
+    template_name = 'event/event_detail.html'
+
+
 class EventCreateView(LoginRequiredMixin, generic.CreateView):
     model = Event
     form_class = EventCreationForm

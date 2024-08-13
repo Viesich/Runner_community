@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ event.name }}</h1>
+  <p>{{ event.location }}</p>
+  <br>
+  <p><strong>Date: </strong>{{ event.start_datetime|date:"d.m.Y, l" }}</p>
+  <p><strong>Time: </strong>{{ event.start_datetime|date:"H:i" }}</p>
+  {% if runner.phone_number %}
+    <p><strong>Phone number: </strong>{{ runner.phone_number }}</p>
+    <a href="{% url "event:runner_update" pk=runner.id %}" class="btn btn-primary mr-5">Update</a>
+    <a href="{% url "event:runner_delete" pk=runner.id %}" class="btn btn-danger">Delete</a>
+  {% endif %}
+{% endblock %}

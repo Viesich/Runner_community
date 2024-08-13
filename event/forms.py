@@ -71,17 +71,27 @@ class RunnerUpdateForm(forms.ModelForm):
 
 
 class EventCreationForm(forms.ModelForm):
-    date = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        label="Start date",
+    start_datetime = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        label="Start date and time",
     )
+
     location = forms.CharField(
         label="City, street, starting point",
     )
 
     class Meta:
         model = Event
-        fields = "__all__"
+        fields = [
+            'name',
+            'start_datetime',
+            'location',
+            'distances',
+            'description',
+            'event_type',
+            'organiser',
+            'is_active'
+        ]
 
 
 class EventSearchForm(forms.Form):
