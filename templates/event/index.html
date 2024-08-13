@@ -17,7 +17,7 @@
         <th>Date race</th>
         <th>Name race</th>
         <th>Location</th>
-        <th>Description</th>
+        <th>Distances</th>
         <th>Organiser</th>
         {% if not user.is_staff %}
           <th>Participants</th>
@@ -32,9 +32,9 @@
       {% for event in events %}
         <tr>
           <td>{{ event.date | date:"d.m.Y" }}</td>
-          <td>{{ event.name }}</td>
+          <td><a href="#">{{ event.name }}</a></td>
           <td>{{ event.location }}</td>
-          <td>{{ event.description }}</td>
+          <td>{{ event.get_distances|join:", " }}</td>
           <td>{{ event.organiser }}</td>
           {% if not user.is_staff %}
             <td><a href="{% url 'event:registration_create' event_id=event.id %}" class="btn btn-primary">Join to event</a></td>
