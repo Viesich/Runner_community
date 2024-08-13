@@ -22,10 +22,6 @@
         {% if not user.is_staff %}
           <th>Participants</th>
         {% endif %}
-        {% if user.is_staff %}
-          <th>Update</th>
-          <th>Delete</th>
-        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -38,10 +34,6 @@
           <td>{{ event.organiser }}</td>
           {% if not user.is_staff %}
             <td><a href="{% url 'event:registration_create' event_id=event.id %}" class="btn btn-primary">Join to event</a></td>
-          {% endif %}
-          {% if user.is_staff %}
-            <td><a href="{% url 'event:event_update' pk=event.pk%}" class="btn btn-primary">Update</a></td>
-            <td><a href="{% url 'event:event_delete' pk=event.pk%}" class="btn btn-danger">Delete</a></td>
           {% endif %}
         </tr>
       {% endfor %}
