@@ -2,6 +2,9 @@
   {% if user.is_authenticated %}
     <li class="list-group-item"><a href="{% url 'events:runner_detail' user.pk %}" class="text-dark font-weight-bold">Profile {{ user.last_name }} {{ user.first_name }}</a></li>
     <li class="list-group-item bg-light">
+      <a href="{% url 'event:runner_list' %}" class="text-dark font-weight-bold">Community</a>
+    </li>
+    <li class="list-group-item bg-light">
       <a href="{% url 'event:registration_list' %}" class="text-dark font-weight-bold">My registrations</a>
     </li>
     <li class="list-group-item">

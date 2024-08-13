@@ -59,6 +59,12 @@ class EventDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy('event:index')
 
 
+class RunnerListView(LoginRequiredMixin, generic.ListView):
+    model = Runner
+    context_object_name = 'runners'
+    template_name = "event/runner_list.html"
+
+
 class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
     model = Runner
     context_object_name = 'runner'
