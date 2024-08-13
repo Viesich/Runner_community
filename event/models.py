@@ -27,16 +27,16 @@ class Event(models.Model):
     ]
 
     name = models.CharField(max_length=100)
-    date = models.DateTimeField()
+    start_datetime = models.DateTimeField()
     location = models.CharField(max_length=100)
-    distances = models.CharField(max_length=255, help_text="Перелічіть дистанції через кому (наприклад, 42, 21, 10)")
+    distances = models.CharField(max_length=255, help_text="List distances separated by commas (eg 42, 21, 10)")
     description = models.TextField()
     event_type = models.CharField(max_length=100, choices=EVENT_TYPE_CHOICES)
     organiser = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ('date',)
+        ordering = ('start_datetime',)
 
     def get_distances(self):
         return list(f"{d.strip()} км" for d in self.distances.split(','))
@@ -112,10 +112,10 @@ class Registration(models.Model):
         if self.distance not in [choice[0] for choice in self.get_distance_choices()]:
             raise ValueError("Invalid distance for the event type")
 
-        if self.event.date <= timezone.now():
+        if self.event.start_datetime <= timezone.now():
             raise ValueError("Cannot register for an event that has already passed")
 
-        if self.event.date > timezone.now():
+        if self.event.start_datetime > timezone.now():
             self.status = True
         else:
             self.status = False

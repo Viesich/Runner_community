@@ -36,19 +36,19 @@ class RunnerAdmin(UserAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ("date", "name", "event_type", "location")
+    list_display = ("start_datetime", "name", "event_type", "location")
     search_fields = ('name',)
-    list_filter = ('name', "date", "event_type")
+    list_filter = ('name', "start_datetime", "event_type")
 
 
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
     list_display = ('event_date', 'event', 'distance', 'runner',)
     search_fields = ('runner__last_name', 'runner__first_name', 'event__name')
-    list_filter = ('event__date', 'event', 'distance')
+    list_filter = ('event__start_datetime', 'event', 'distance')
 
     def event_date(self, obj):
-        return obj.event.date
+        return obj.event.start_datetime
 
     event_date.short_description = 'Event Date'
 
@@ -62,7 +62,7 @@ class RegistrationAdmin(admin.ModelAdmin):
 class ResultAdmin(admin.ModelAdmin):
     list_display = ('event_name', 'event_date', 'runner_last_name', 'distance', 'time', 'position')
     search_fields = ('registration__runner__last_name', 'registration__runner__first_name',)
-    list_filter = ('registration__event__date', 'registration__event', 'registration__distance')
+    list_filter = ('registration__event__start_datetime', 'registration__event', 'registration__distance')
 
     def event_name(self, obj):
         return obj.registration.event.name
@@ -70,7 +70,7 @@ class ResultAdmin(admin.ModelAdmin):
     event_name.short_description = 'Event Name'
 
     def event_date(self, obj):
-        return obj.registration.event.date
+        return obj.registration.event.start_datetime
 
     event_date.short_description = 'Event Date'
 
