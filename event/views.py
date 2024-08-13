@@ -65,6 +65,13 @@ class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'event/runner_detail.html'
 
 
+class RunnerRegisterView(generic.CreateView):
+    model = Runner
+    form_class = RunnerCreationForm
+    template_name = 'event/runner_form.html'
+    success_url = reverse_lazy('event:index')
+
+
 class RunnerCreateView(LoginRequiredMixin, generic.CreateView):
     model = Runner
     form_class = RunnerCreationForm

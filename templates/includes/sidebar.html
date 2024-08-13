@@ -14,7 +14,8 @@
     </li>
   {% else %}
     <li class="list-group-item">
-      <a href="{% url 'login' %}">Login</a>
+      <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+      <a href="{% url 'event:register_runner' %}" class="btn btn-primary">Register</a>
     </li>
   {% endif %}
   <br>
