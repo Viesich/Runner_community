@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from event.models import Event, EventRegistration, Result, Runner
+from event.models import Event, Registration, Result, Runner
 
 
 @admin.register(Runner)
@@ -41,8 +41,8 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ('name', "date", "event_type")
 
 
-@admin.register(EventRegistration)
-class EventRegistrationAdmin(admin.ModelAdmin):
+@admin.register(Registration)
+class RegistrationAdmin(admin.ModelAdmin):
     list_display = ('event_date', 'event', 'distance', 'runner',)
     search_fields = ('runner__last_name', 'runner__first_name', 'event__name')
     list_filter = ('event__date', 'event', 'distance')
@@ -61,25 +61,25 @@ class EventRegistrationAdmin(admin.ModelAdmin):
 @admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):
     list_display = ('event_name', 'event_date', 'runner_last_name', 'distance', 'time', 'position')
-    search_fields = ('event_registration__runner__last_name', 'event_registration__runner__first_name',)
-    list_filter = ('event_registration__event__date', 'event_registration__event', 'event_registration__distance')
+    search_fields = ('registration__runner__last_name', 'registration__runner__first_name',)
+    list_filter = ('registration__event__date', 'registration__event', 'registration__distance')
 
     def event_name(self, obj):
-        return obj.event_registration.event.name
+        return obj.registration.event.name
 
     event_name.short_description = 'Event Name'
 
     def event_date(self, obj):
-        return obj.event_registration.event.date
+        return obj.registration.event.date
 
     event_date.short_description = 'Event Date'
 
     def runner_last_name(self, obj):
-        return obj.event_registration.runner.last_name
+        return obj.registration.runner.last_name
 
     runner_last_name.short_description = 'Runner Last Name'
 
     def distance(self, obj):
-        return obj.event_registration.distance
+        return obj.registration.distance
 
     distance.short_description = 'Distance'

@@ -1,8 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from event.models import Runner, Event, Result, EventRegistration
+from event.models import Runner, Event, Result, Registration
 
 
 class RunnerCreationForm(UserCreationForm):
@@ -100,3 +99,10 @@ class EventSearchForm(forms.Form):
         widget=forms.TextInput(
             attrs={"placeholder": "Location"}),
     )
+
+
+# class RegistrationCreateForm(forms.ModelForm):
+#     class Meta:
+#         model = Registration
+#         fields = ['event', 'runner', 'distance']
+#

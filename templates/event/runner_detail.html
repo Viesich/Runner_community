@@ -3,7 +3,7 @@
 {% block content %}
   <h1>{{ runner.first_name }} {{ runner.last_name }}</h1>
   <p><strong>username: </strong>{{ runner.username }}</p>
-  <p><strong>date of birth: </strong>{{ runner.date_of_birth }}</p>
+  <p><strong>date of birth: </strong>{{ runner.date_of_birth|date:"d.m.Y" }}</p>
   {% if runner.phone_number %}
     <p><strong>Phone number: </strong>{{ runner.phone_number }}</p>
     <a href="{% url "event:runner_update" pk=runner.id %}" class="btn btn-primary mr-5">Update</a>

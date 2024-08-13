@@ -42,8 +42,8 @@ class Event(models.Model):
 
 
 class Result(models.Model):
-    event_registration = models.ForeignKey(
-        "EventRegistration",
+    registration = models.ForeignKey(
+        "Registration",
         on_delete=models.CASCADE,
         related_name='results',
     )
@@ -53,13 +53,13 @@ class Result(models.Model):
     def __str__(self):
         return (
             f"{self.position} place "
-            f"{self.event_registration.runner.last_name} "
-            f"{self.event_registration.runner.first_name} "
+            f"{self.registration.runner.last_name} "
+            f"{self.registration.runner.first_name} "
             f"{self.time}"
         )
 
 
-class EventRegistration(models.Model):
+class Registration(models.Model):
     DISTANCE_CHOICES_RUNNING = [
         (5, '5 km'),
         (10, '10 km'),
