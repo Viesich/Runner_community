@@ -5,7 +5,11 @@
       <a href="{% url 'event:runner_list' %}" class="text-dark font-weight-bold">Community</a>
     </li>
     <li class="list-group-item bg-light">
-      <a href="{% url 'event:registration_list' %}" class="text-dark font-weight-bold">My registrations</a>
+      {% if user.registrations.exists %}
+        <a href="{% url 'event:my_registrations' %}" class="text-dark font-weight-bold">My registrations</a>
+      {% else %}
+        <span>No registrations available</span>
+      {% endif %}
     </li>
     <li class="list-group-item">
       <form method="post" action="{% url 'logout' %}">
