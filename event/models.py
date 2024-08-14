@@ -64,26 +64,8 @@ class Result(models.Model):
 
 
 class Registration(models.Model):
-    DISTANCE_CHOICES_RUNNING = [
-        (5, '5 km'),
-        (10, '10 km'),
-        (21, '21 km'),
-        (42, '42 km'),
-    ]
-    DISTANCE_CHOICES_CYCLING = [
-        (50, '50 km'),
-        (100, '100 km'),
-        (200, '200 km'),
-    ]
-    DISTANCE_CHOICES_SWIMMING = [
-        (1, '1 km'),
-        (2, '2 km'),
-        (5, '5 km'),
-        (10, '10 km'),
-    ]
-
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='events')
-    runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='runners')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='registrations')
+    runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='registrations')
     registration_date = models.DateTimeField(auto_now_add=True)
     distance = models.IntegerField()
     status = models.BooleanField(default=True)
@@ -91,33 +73,9 @@ class Registration(models.Model):
     def __str__(self):
         return f"{self.runner.last_name} {self.runner.first_name} - {self.event.name}"
 
-    def cancel_registration(self):
-        self.status = False
-        self.save()
-
-    def is_active(self):
-        return self.status
-
-    def get_distance_choices(self):
-        if self.event.event_type == 'Running':
-            return self.DISTANCE_CHOICES_RUNNING
-        elif self.event.event_type == 'Cycling':
-            return self.DISTANCE_CHOICES_CYCLING
-        elif self.event.event_type == 'Swimming':
-            return self.DISTANCE_CHOICES_SWIMMING
-        else:
-            return []
-
     def save(self, *args, **kwargs):
-        if self.distance not in [choice[0] for choice in self.get_distance_choices()]:
-            raise ValueError("Invalid distance for the event type")
-
         if self.event.start_datetime <= timezone.now():
-            raise ValueError("Cannot register for an event that has already passed")
-
-        if self.event.start_datetime > timezone.now():
-            self.status = True
-        else:
             self.status = False
-
+        else:
+            self.status = True
         super().save(*args, **kwargs)
