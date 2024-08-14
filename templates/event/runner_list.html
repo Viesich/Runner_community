@@ -15,7 +15,7 @@
         {% for runner in runners %}
           <tr>
           {% if not runner.is_staff %}
-            <td><a href="{% url 'events:runner_detail' pk=runner.id %}">{{ runner.first_name }} {{ runner.last_name }}</a></td>
+            <td><a href="{% url 'event:runner_detail' pk=runner.id %}">{{ runner.first_name }} {{ runner.last_name }}</a></td>
             <td>{{ runner.gender }}</td>
             <td>{{ runner.date_of_birth | date:"d.m.Y" }}</td>
           {% endif %}

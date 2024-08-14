@@ -21,7 +21,9 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ registration.distance }} км</td>
-                    <td><a href="{% url 'events:runner_detail' pk=registration.runner.id %}">{{ registration.runner }}</a></td>
+                    <td>
+                      <a href="{% url 'event:runner_detail' pk=registration.runner.id %}">{{ registration.runner }}</a>
+                    </td>
                     <td>{{ registration.runner.city }}</td>
                     
                 </tr>

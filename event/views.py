@@ -103,7 +103,7 @@ class RunnerUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        if obj != self.request.user:
+        if obj != self.request.user and not self.request.user.is_staff:
             raise PermissionDenied
         return obj
 
