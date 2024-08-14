@@ -8,6 +8,7 @@ from django.utils import timezone
 class Runner(AbstractUser):
     first_name = models.CharField(max_length=30, blank=False)
     last_name = models.CharField(max_length=30, blank=False)
+    city = models.CharField(max_length=30, null=True, blank=True)
     date_of_birth = models.DateField()
     gender = models.CharField(
         max_length=10,
@@ -69,6 +70,9 @@ class Registration(models.Model):
     registration_date = models.DateTimeField(auto_now_add=True)
     distance = models.IntegerField()
     status = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('event', 'runner', 'distance')
 
     def __str__(self):
         return f"{self.runner.last_name} {self.runner.first_name} - {self.event.name}"
