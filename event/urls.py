@@ -11,8 +11,10 @@ from event.views import (
     RunnerCreateView,
     RunnerUpdateView,
     RunnerDeleteView,
-    RegistrationListView,
-    RegistrationCreateView, RunnerRegisterView,
+    EventRegistrationListView,
+    # RegistrationCreateView,
+    MyRegistrationsView,
+    RunnerRegisterView,
 )
 
 app_name = 'event'
@@ -29,6 +31,8 @@ urlpatterns = [
     path("runners/create", RunnerCreateView.as_view(), name="runner_create"),
     path("runners/<int:pk>/update", RunnerUpdateView.as_view(), name="runner_update"),
     path("runners/<int:pk>/delete", RunnerDeleteView.as_view(), name="runner_delete"),
-    path('registrations/', RegistrationListView.as_view(), name='registration_list'),
-    path('registrations/create/<int:event_id>/', RegistrationCreateView.as_view(), name='registration_create'),
+    path('event/<int:pk>/registrations/', EventRegistrationListView.as_view(), name='registration_list'),
+    path('my-registrations/', MyRegistrationsView.as_view(), name='my_registrations'),
+
+    # path('registrations/<int:event_id>/create/', RegistrationCreateView.as_view(), name='registration_create'),
 ]

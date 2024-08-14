@@ -21,6 +21,7 @@
         <th>Organiser</th>
         {% if not user.is_staff %}
           <th>Participants</th>
+          <th>Registration</th>
         {% endif %}
       </tr>
     </thead>
@@ -33,7 +34,8 @@
           <td>{{ event.get_distances|join:", " }}</td>
           <td>{{ event.organiser }}</td>
           {% if not user.is_staff %}
-            <td><a href="{% url 'event:registration_create' event_id=event.id %}" class="btn btn-primary">Join to event</a></td>
+            <td><a href="{% url 'event:registration_list' pk=event.id %}" class="btn btn-secondary">participants</a></td>
+            <td><a href="#" class="btn btn-primary">registration</a></td>
           {% endif %}
         </tr>
       {% endfor %}
