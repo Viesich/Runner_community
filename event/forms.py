@@ -12,7 +12,7 @@ class RunnerCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = Runner
-        fields = UserCreationForm.Meta.fields + ("first_name", "last_name", "date_of_birth", "gender", "phone_number")
+        fields = UserCreationForm.Meta.fields + ("first_name", "last_name", "date_of_birth", "city", "gender", "phone_number")
 
 
 class RunnerUpdateForm(forms.ModelForm):
@@ -40,7 +40,7 @@ class RunnerUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Runner
-        fields = ['username', 'first_name', 'last_name', 'date_of_birth', 'gender', 'phone_number']
+        fields = ['username', 'first_name', 'last_name', 'date_of_birth', 'city', 'gender', 'phone_number']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -118,6 +118,13 @@ class RunnerRegistrationForm(forms.ModelForm):
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
         }
+
+
+# class RegistrationForm(forms.ModelForm):
+#     class Meta:
+#         model = Registration
+#         fields = ['distance',]
+
 # class RegistrationCreateForm(forms.ModelForm):
 #     class Meta:
 #         model = Registration
