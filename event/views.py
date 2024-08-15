@@ -10,7 +10,7 @@ from event.forms import (
     RunnerUpdateForm,
     EventCreationForm,
     EventSearchForm,
-    # RegistrationForm
+    # RunnerRegistrationForm,
 )
 from event.models import Event, Runner, Registration
 from django.urls import reverse_lazy, reverse
@@ -86,12 +86,6 @@ class RunnerRegisterView(generic.CreateView):
     success_url = reverse_lazy('event:index')
 
 
-class RunnerCreateView(LoginRequiredMixin, generic.CreateView):
-    model = Runner
-    form_class = RunnerCreationForm
-    success_url = reverse_lazy("event:index")
-
-
 class RunnerUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Runner
     form_class = RunnerUpdateForm
@@ -117,6 +111,12 @@ class RunnerDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Runner
     template_name = "event/runner_confirm_delete.html"
     success_url = reverse_lazy("event:index")
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj != self.request.user and not self.request.user.is_staff:
+            raise PermissionDenied
+        return obj
 
 
 class EventRegistrationListView(LoginRequiredMixin, generic.ListView):
@@ -157,7 +157,8 @@ class MyRegistrationsView(LoginRequiredMixin, generic.ListView):
         context['events'] = Event.objects.filter(id__in=context['registrations'].values('event'))
         return context
 
-# class RegistrationCreateView(generic.CreateView):
+
+# class EventRegistrationCreate(LoginRequiredMixin, generic.CreateView):
 #     model = Registration
 #     form_class = RegistrationForm
 #     template_name = 'event/registration_form.html'

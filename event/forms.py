@@ -111,22 +111,8 @@ class EventSearchForm(forms.Form):
     )
 
 
-class RunnerRegistrationForm(forms.ModelForm):
-    class Meta:
-        model = Runner
-        fields = ['first_name', 'last_name', 'date_of_birth', 'gender', 'phone_number']
-        widgets = {
-            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
-        }
+# class RunnerRegistrae
 
 
-# class RegistrationForm(forms.ModelForm):
-#     class Meta:
-#         model = Registration
-#         fields = ['distance',]
+# class EventRegistrationCreationForm(forms.ModelForm):
 
-# class RegistrationCreateForm(forms.ModelForm):
-#     class Meta:
-#         model = Registration
-#         fields = ['event', 'runner', 'distance']
-#

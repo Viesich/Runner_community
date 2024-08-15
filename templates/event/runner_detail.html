@@ -7,6 +7,8 @@
   {% if runner.phone_number %}
     <p><strong>Phone number: </strong>{{ runner.phone_number|phone2numeric }}</p>
   {% endif %}
-  <a href="{% url "event:runner_update" pk=runner.id %}" class="btn btn-primary mr-5">Update</a>
-  <a href="{% url "event:runner_delete" pk=runner.id %}" class="btn btn-danger">Delete</a>
+  {% if runner == user or user.is_staff  %}
+    <a href="{% url "event:runner_update" pk=runner.id %}" class="btn btn-primary mr-5">Update</a>
+    <a href="{% url "event:runner_delete" pk=runner.id %}" class="btn btn-danger">Delete</a>
+  {% endif %}
 {% endblock %}
