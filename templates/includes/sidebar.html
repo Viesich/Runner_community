@@ -1,6 +1,14 @@
 <ul class="sidebar-nav list-group">
   {% if user.is_authenticated %}
-    <li class="list-group-item"><a href="{% url 'event:runner_detail' user.pk %}" class="text-dark font-weight-bold">Profile {{ user.last_name }} {{ user.first_name }}</a></li>
+    <li class="list-group-item">
+      <a href="{% url 'event:runner_detail' user.pk %}" class="text-dark font-weight-bold">
+        Profile 
+        {% if user.is_staff %}
+          admin
+        {% endif %}
+        {{ user.last_name }} {{ user.first_name }}
+      </a>
+    </li>
     <li class="list-group-item bg-light">
       <a href="{% url 'event:runner_list' %}" class="text-dark font-weight-bold">Community</a>
     </li>

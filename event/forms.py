@@ -16,11 +16,6 @@ class RunnerCreationForm(UserCreationForm):
 
 
 class RunnerUpdateForm(forms.ModelForm):
-    current_password = forms.CharField(
-        widget=forms.PasswordInput,
-        required=False,
-        label="Current password",
-    )
 
     new_password = forms.CharField(
         widget=forms.PasswordInput,
@@ -44,17 +39,10 @@ class RunnerUpdateForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        current_password = cleaned_data.get("current_password")
         new_password = cleaned_data.get("new_password")
         confirm_password = cleaned_data.get("confirm_password")
 
         if new_password:
-            if not current_password:
-                raise forms.ValidationError("Please enter your current password to change your password.")
-
-            if not self.instance.check_password(current_password):
-                raise forms.ValidationError("The current password is incorrect.")
-
             if new_password != confirm_password:
                 raise forms.ValidationError("Passwords do not match!")
 
