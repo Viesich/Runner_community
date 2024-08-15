@@ -99,8 +99,14 @@ class EventSearchForm(forms.Form):
     )
 
 
-# class RunnerRegistrae
+class RegistrationForm(forms.ModelForm):
+    class Meta:
+        model = Registration
+        fields = [
+            'distance',
+        ]
 
 
-# class EventRegistrationCreationForm(forms.ModelForm):
+
+
 

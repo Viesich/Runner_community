@@ -9,7 +9,7 @@ from event.forms import (
     RunnerCreationForm,
     RunnerUpdateForm,
     EventCreationForm,
-    EventSearchForm,
+    EventSearchForm, RegistrationForm,
     # RunnerRegistrationForm,
 )
 from event.models import Event, Runner, Registration
@@ -158,15 +158,15 @@ class MyRegistrationsView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-# class EventRegistrationCreate(LoginRequiredMixin, generic.CreateView):
-#     model = Registration
-#     form_class = RegistrationForm
-#     template_name = 'event/registration_form.html'
-#
-#     def form_valid(self, form):
-#         form.instance.runner = self.request.user
-#         form.instance.event = Event.objects.get(pk=self.kwargs['event_id'])
-#         return super().form_valid(form)
-#
-#     def get_success_url(self):
-#         return reverse_lazy('event:registration_list', pk=self.kwargs['event_id'])
+class RegistrationCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Registration
+    form_class = RegistrationForm
+    template_name = 'event/registration_form.html'
+
+    def form_valid(self, form):
+        form.instance.runner = self.request.user
+        form.instance.event = Event.objects.get(pk=self.kwargs['event_id'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('event:my_registrations_list')
