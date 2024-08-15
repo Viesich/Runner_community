@@ -2,7 +2,7 @@
   {% if user.is_authenticated %}
     <li class="list-group-item">
       <a href="{% url 'event:runner_detail' user.pk %}" class="text-dark font-weight-bold">
-        Profile 
+        Profile
         {% if user.is_staff %}
           admin
         {% endif %}
@@ -14,7 +14,7 @@
     </li>
     <li class="list-group-item bg-light">
       {% if user.registrations.exists %}
-        <a href="{% url 'event:my_registrations' %}" class="text-dark font-weight-bold">My registrations</a>
+        <a href="{% url 'event:my_registrations_list' %}" class="text-dark font-weight-bold">My registrations</a>
       {% else %}
         <span>No registrations available</span>
       {% endif %}
