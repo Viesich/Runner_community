@@ -20,6 +20,9 @@ class RunnerCreationForm(UserCreationForm):
             "gender",
             "phone_number",
         )
+        widgets = {
+            "distances": forms.CheckboxSelectMultiple(),
+        }
 
 
 class RunnerUpdateForm(forms.ModelForm):
@@ -74,15 +77,23 @@ class RunnerUpdateForm(forms.ModelForm):
 
 
 class RegistrationCreationForm(forms.ModelForm):
-    distances = forms.ModelChoiceField(
-        queryset=Distance.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        label="Distances",
-    )
+    def __init__(self, *args, **kwargs):
+        event_id = kwargs.pop('event_id', None)
+        super().__init__(*args, **kwargs)
+
+        if event_id:
+            try:
+                event = Event.objects.get(id=event_id)
+                self.fields['distances'].queryset = Distance.objects.filter(id__in=event.distances.values_list('id', flat=True))
+            except Event.DoesNotExist:
+                self.fields['distances'].queryset = Distance.objects.none()
 
     class Meta:
         model = Registration
-        fields = ["event", "distances"]
+        fields = ['distances']
+        widgets = {
+            'distances': forms.CheckboxSelectMultiple(),
+        }
 
 
 class EventCreationForm(forms.ModelForm):
@@ -96,7 +107,7 @@ class EventCreationForm(forms.ModelForm):
     )
     distances = forms.ModelMultipleChoiceField(
         queryset=Distance.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.Select,
         label="Distances",
     )
 
@@ -130,6 +141,18 @@ class EventSearchForm(forms.Form):
 
 
 class RegistrationForm(forms.ModelForm):
+    distances = forms.ModelChoiceField(
+        queryset=Distance.objects.all(),
+        widget=forms.RadioSelect
+    )
+
+    def __init__(self, *args, **kwargs):
+        event_id = kwargs.pop('event_id', None)
+        super().__init__(*args, **kwargs)
+        if event_id:
+            event = Event.objects.get(id=event_id)
+            self.fields['distances'].queryset = event.distances.all()
+
     class Meta:
         model = Registration
         fields = [

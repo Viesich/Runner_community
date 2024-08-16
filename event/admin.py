@@ -47,6 +47,9 @@ class RunnerAdmin(UserAdmin):
         )
     )
 
+    verbose_name = "Runner"
+    verbose_name_plural = "Runners"
+
     def full_name(self, obj: Runner) -> str:
         return f"{obj.last_name} {obj.first_name}"
 
@@ -71,9 +74,10 @@ class RegistrationAdmin(admin.ModelAdmin):
         "event_date",
         "event",
         "runner",
+        "distances",
     )
-    search_fields = ("runner__last_name", "runner__first_name", "event__name")
-    list_filter = ("event__start_datetime", "event",)
+    search_fields = ("runner__last_name", "runner__first_name", "event__name", "distances")
+    list_filter = ("event__start_datetime", "event", )
 
     def event_date(self, obj: Registration) -> datetime:
         return obj.event.start_datetime
@@ -120,6 +124,6 @@ class ResultAdmin(admin.ModelAdmin):
     runner_last_name.short_description = "Runner Last Name"
 
     def distance(self, obj: Result) -> int:
-        return obj.registration.distances
+        return obj.registration.distances.km
 
     distance.short_description = "Distance"

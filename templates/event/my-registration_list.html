@@ -17,7 +17,7 @@
           <td>{{ forloop.counter }}</td>
           <td>{{ registration.event.start_datetime|date:"d.m.Y, H:i" }}</td>
           <td><a href="{% url 'event:event_detail' pk=registration.event.pk %}">{{ registration.event.name }}</a></td>
-          <td>{{ registration.distance }} км</td>
+          <td>{{ registration.distances }} км</td>
           <td>{{ registration.event.location }}</td>
         </tr>
       {% empty %}

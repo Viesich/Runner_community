@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.http import HttpResponse, HttpRequest
 from django.views import generic
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,7 @@ from event.forms import (
     RunnerUpdateForm,
     EventCreationForm,
     EventSearchForm,
-    RegistrationCreationForm,
+    RegistrationCreationForm, RegistrationForm,
 )
 from event.models import Event, Runner, Registration, Distance
 from django.urls import reverse_lazy, reverse
@@ -131,7 +131,7 @@ class EventRegistrationListView(LoginRequiredMixin, generic.ListView):
         return (
             Registration.objects
             .filter(event_id=event_id)
-            .order_by("distance")
+            .order_by("distances")
         )
 
     def get_context_data(self, **kwargs: dict) -> dict:
@@ -142,7 +142,7 @@ class EventRegistrationListView(LoginRequiredMixin, generic.ListView):
         context.update(
             {
                 "event_type": event.event_type,
-                "event_name": event.km,
+                "event_name": event.name,
                 "event_date": event.start_datetime,
                 "event_location": event.location,
                 "distances": event.get_distances(),
@@ -170,21 +170,24 @@ class MyRegistrationsView(LoginRequiredMixin, generic.ListView):
 
 class RegistrationCreateView(LoginRequiredMixin, generic.CreateView):
     model = Registration
-    form_class = RegistrationCreationForm
+    form_class = RegistrationForm
     template_name = "event/registration_form.html"
 
-    def get_queryset(self) -> Distance:
-        return Distance.objects.all()
+    def get_form_kwargs(self) -> dict:
+        kwargs = super().get_form_kwargs()
+        kwargs['event_id'] = self.kwargs['event_id']
+        return kwargs
 
     def form_valid(self, form):
-        event = form.cleaned_data["event"]
+        event = get_object_or_404(Event, id=self.kwargs['event_id'])
         runner = self.request.user
-        distance = form.cleaned_data["distance"]
 
-        if Registration.objects.filter(event=event, runner=runner, distance=distance).exists():
-            messages.error(self.request, "You are already registered for this event.")
-            return redirect("event:my_registrations_list")
+        if Registration.objects.filter(event=event, runner=runner).exists():
+            form.add_error(None, "You are already registered for this event.")
+            return self.form_invalid(form)
 
+        form.instance.event = event
+        form.instance.runner = runner
         return super().form_valid(form)
 
     def get_success_url(self) -> str:

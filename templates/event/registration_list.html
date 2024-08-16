@@ -20,7 +20,7 @@
             {% for registration in registrations %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ registration.distance }} км</td>
+                    <td>{{ registration.distances }} км</td>
                     <td>
                       <a href="{% url 'event:runner_detail' pk=registration.runner.id %}">{{ registration.runner }}</a>
                     </td>
