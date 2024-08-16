@@ -22,10 +22,10 @@ class Runner(AbstractUser):
 
 
 class Distance(models.Model):
-    name = models.CharField(max_length=100)
+    km = models.IntegerField()
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.km} km"
 
 
 class Event(models.Model):
@@ -48,13 +48,12 @@ class Event(models.Model):
         ordering = ("start_datetime",)
 
     def get_distances(self) -> list[str]:
-        return [distance.name for distance in self.distances.all()]
+        return [distance.km for distance in self.distances.all()]
 
     def save(self, *args: tuple, **kwargs: dict) -> None:
         if self.start_datetime <= timezone.now():
             self.is_active = False
         super().save(*args, **kwargs)
-
 
     def __str__(self) -> str:
         return self.name
@@ -84,11 +83,8 @@ class Registration(models.Model):
         Runner, on_delete=models.CASCADE, related_name="registrations"
     )
     registration_date = models.DateTimeField(auto_now_add=True)
-    distance = models.IntegerField()
+    distances = models.ManyToManyField(Distance, related_name="registrations")
     status = models.BooleanField(default=True)
-
-    class Meta:
-        unique_together = ("event", "runner", "distance")
 
     def __str__(self) -> str:
         return (
