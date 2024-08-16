@@ -1,8 +1,6 @@
 from django.db import models
-
-from django.contrib.auth.models import AbstractUser, Group, Permission
-from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
 
 class Runner(AbstractUser):
@@ -12,37 +10,47 @@ class Runner(AbstractUser):
     date_of_birth = models.DateField()
     gender = models.CharField(
         max_length=10,
-        choices=[('Male', 'Male'), ('Female', 'Female'),],
+        choices=[
+            ("Male", "Male"),
+            ("Female", "Female"),
+        ],
     )
     phone_number = models.CharField(max_length=15, null=True, blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.last_name + " " + self.first_name
+
+
+class Distance(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Event(models.Model):
     EVENT_TYPE_CHOICES = [
-        ('Running', 'Running'),
-        ('Cycling', 'Cycling'),
-        ('Swimming', 'Swimming'),
+        ("Running", "Running"),
+        ("Cycling", "Cycling"),
+        ("Swimming", "Swimming"),
     ]
 
     name = models.CharField(max_length=100)
     start_datetime = models.DateTimeField()
     location = models.CharField(max_length=100)
-    distances = models.CharField(max_length=255, help_text="List distances separated by commas (eg 42, 21, 10)")
+    distances = models.ManyToManyField(Distance)
     description = models.TextField()
     event_type = models.CharField(max_length=100, choices=EVENT_TYPE_CHOICES)
     organiser = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ('start_datetime',)
+        ordering = ("start_datetime",)
 
-    def get_distances(self):
-        return list(f"{d.strip()} км" for d in self.distances.split(','))
+    def get_distances(self) -> list[str]:
+        return [distance.name for distance in self.distances.all()]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -50,12 +58,12 @@ class Result(models.Model):
     registration = models.ForeignKey(
         "Registration",
         on_delete=models.CASCADE,
-        related_name='results',
+        related_name="results",
     )
     time = models.TimeField()
     position = models.IntegerField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"{self.position} place "
             f"{self.registration.runner.last_name} "
@@ -65,19 +73,27 @@ class Result(models.Model):
 
 
 class Registration(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='registrations')
-    runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='registrations')
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name="registrations"
+    )
+    runner = models.ForeignKey(
+        Runner, on_delete=models.CASCADE, related_name="registrations"
+    )
     registration_date = models.DateTimeField(auto_now_add=True)
     distance = models.IntegerField()
     status = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = ('event', 'runner', 'distance')
+        unique_together = ("event", "runner", "distance")
 
-    def __str__(self):
-        return f"{self.runner.last_name} {self.runner.first_name} - {self.event.name}"
+    def __str__(self) -> str:
+        return (
+            f"{self.runner.last_name} "
+            f"{self.runner.first_name} - "
+            f"{self.event.name}"
+        )
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: tuple, **kwargs: dict) -> None:
         if self.event.start_datetime <= timezone.now():
             self.status = False
         else:

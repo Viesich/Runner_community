@@ -6,10 +6,10 @@
   <br>
   <p><strong>Date: </strong>{{ event.start_datetime|date:"d.m.Y, l" }}</p>
   <p><strong>Time: </strong>{{ event.start_datetime|date:"H:i" }}</p>
-  <p><strong>Description: </strong>{{ event.description|safe }}</p>
+  <p><strong>Description: </strong>{{ event.description|linebreaks }}</p>
   
   {% if runner.is_staff %}
-    <a href="{% url "event:runner_update" pk=runner.id %}" class="btn btn-primary mr-5">Update</a>
-    <a href="{% url "event:runner_delete" pk=runner.id %}" class="btn btn-danger">Delete</a>
+    <a href="{% url "event:event_update" pk=event.id %}" class="btn btn-primary mr-5">Update</a>
+    <a href="{% url "event:event_delete" pk=event.id %}" class="btn btn-danger">Delete</a>
   {% endif %}
 {% endblock %}

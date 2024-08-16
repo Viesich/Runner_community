@@ -1,18 +1,25 @@
-from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 
-from event.models import Runner, Event, Result, Registration
+from event.models import Runner, Event, Registration, Distance
 
 
 class RunnerCreationForm(UserCreationForm):
     date_of_birth = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        widget=forms.DateInput(attrs={"type": "date"}),
         label="Date of birth",
     )
 
     class Meta(UserCreationForm.Meta):
         model = Runner
-        fields = UserCreationForm.Meta.fields + ("first_name", "last_name", "date_of_birth", "city", "gender", "phone_number")
+        fields = UserCreationForm.Meta.fields + (
+            "first_name",
+            "last_name",
+            "date_of_birth",
+            "city",
+            "gender",
+            "phone_number",
+        )
 
 
 class RunnerUpdateForm(forms.ModelForm):
@@ -29,15 +36,23 @@ class RunnerUpdateForm(forms.ModelForm):
     )
 
     date_of_birth = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        widget=forms.DateInput(attrs={"type": "date"}),
         label="Date of birth",
     )
 
     class Meta:
         model = Runner
-        fields = ['username', 'first_name', 'last_name', 'date_of_birth', 'city', 'gender', 'phone_number']
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "date_of_birth",
+            "city",
+            "gender",
+            "phone_number",
+        ]
 
-    def clean(self):
+    def clean(self) -> dict[str]:
         cleaned_data = super().clean()
         new_password = cleaned_data.get("new_password")
         confirm_password = cleaned_data.get("confirm_password")
@@ -48,7 +63,7 @@ class RunnerUpdateForm(forms.ModelForm):
 
         return cleaned_data
 
-    def save(self, commit=True):
+    def save(self, commit: bool = True) -> dict[str]:
         runner = super().save(commit=False)
         new_password = self.cleaned_data.get("new_password")
         if new_password:
@@ -58,27 +73,40 @@ class RunnerUpdateForm(forms.ModelForm):
         return runner
 
 
+class RegistrationCreationForm(UserCreationForm):
+    distances = forms.ModelMultipleChoiceField(
+        queryset=Distance.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        label="Distances",
+    )
+
+
 class EventCreationForm(forms.ModelForm):
     start_datetime = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        widget=forms.DateTimeInput(attrs={"type": "datetime-local"}),
         label="Start date and time",
     )
 
     location = forms.CharField(
         label="City, street, starting point",
     )
+    distances = forms.ModelMultipleChoiceField(
+        queryset=Distance.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        label="Distances",
+    )
 
     class Meta:
         model = Event
         fields = [
-            'name',
-            'start_datetime',
-            'location',
-            'distances',
-            'description',
-            'event_type',
-            'organiser',
-            'is_active'
+            "name",
+            "start_datetime",
+            "location",
+            "distances",
+            "description",
+            "event_type",
+            "organiser",
+            "is_active",
         ]
 
 
@@ -87,15 +115,13 @@ class EventSearchForm(forms.Form):
         max_length=100,
         required=False,
         label="",
-        widget=forms.TextInput(
-            attrs={"placeholder": "Name"}),
+        widget=forms.TextInput(attrs={"placeholder": "Name"}),
     )
     location = forms.CharField(
         max_length=100,
         required=False,
         label="",
-        widget=forms.TextInput(
-            attrs={"placeholder": "Location"}),
+        widget=forms.TextInput(attrs={"placeholder": "Location"}),
     )
 
 
@@ -103,10 +129,5 @@ class RegistrationForm(forms.ModelForm):
     class Meta:
         model = Registration
         fields = [
-            'distance',
+            "distance",
         ]
-
-
-
-
-
