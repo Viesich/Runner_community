@@ -18,7 +18,7 @@ class Runner(AbstractUser):
     phone_number = models.CharField(max_length=15, null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.last_name + " " + self.first_name
+        return f"{self.last_name} {self.first_name}"
 
 
 class Distance(models.Model):
@@ -38,7 +38,7 @@ class Event(models.Model):
     name = models.CharField(max_length=100)
     start_datetime = models.DateTimeField()
     location = models.CharField(max_length=100)
-    distances = models.ManyToManyField(Distance)
+    distances = models.ManyToManyField(Distance, related_name="events")
     description = models.TextField()
     event_type = models.CharField(max_length=100, choices=EVENT_TYPE_CHOICES)
     organiser = models.CharField(max_length=100)
@@ -49,6 +49,12 @@ class Event(models.Model):
 
     def get_distances(self) -> list[str]:
         return [distance.name for distance in self.distances.all()]
+
+    def save(self, *args: tuple, **kwargs: dict) -> None:
+        if self.start_datetime <= timezone.now():
+            self.is_active = False
+        super().save(*args, **kwargs)
+
 
     def __str__(self) -> str:
         return self.name
@@ -61,11 +67,9 @@ class Result(models.Model):
         related_name="results",
     )
     time = models.TimeField()
-    position = models.IntegerField()
 
     def __str__(self) -> str:
         return (
-            f"{self.position} place "
             f"{self.registration.runner.last_name} "
             f"{self.registration.runner.first_name} "
             f"{self.time}"
@@ -92,10 +96,3 @@ class Registration(models.Model):
             f"{self.runner.first_name} - "
             f"{self.event.name}"
         )
-
-    def save(self, *args: tuple, **kwargs: dict) -> None:
-        if self.event.start_datetime <= timezone.now():
-            self.status = False
-        else:
-            self.status = True
-        super().save(*args, **kwargs)
