@@ -73,12 +73,16 @@ class RunnerUpdateForm(forms.ModelForm):
         return runner
 
 
-class RegistrationCreationForm(UserCreationForm):
-    distances = forms.ModelMultipleChoiceField(
-        queryset=Distance.objects.none(),
+class RegistrationCreationForm(forms.ModelForm):
+    distances = forms.ModelChoiceField(
+        queryset=Distance.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         label="Distances",
     )
+
+    class Meta:
+        model = Registration
+        fields = ["event", "distances"]
 
 
 class EventCreationForm(forms.ModelForm):
@@ -129,5 +133,5 @@ class RegistrationForm(forms.ModelForm):
     class Meta:
         model = Registration
         fields = [
-            "distance",
+            "distances",
         ]

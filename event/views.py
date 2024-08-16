@@ -1,6 +1,7 @@
+from django.contrib import messages
 from django.http import HttpResponse, HttpRequest
 from django.views import generic
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -141,7 +142,7 @@ class EventRegistrationListView(LoginRequiredMixin, generic.ListView):
         context.update(
             {
                 "event_type": event.event_type,
-                "event_name": event.name,
+                "event_name": event.km,
                 "event_date": event.start_datetime,
                 "event_location": event.location,
                 "distances": event.get_distances(),
@@ -174,6 +175,17 @@ class RegistrationCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_queryset(self) -> Distance:
         return Distance.objects.all()
+
+    def form_valid(self, form):
+        event = form.cleaned_data["event"]
+        runner = self.request.user
+        distance = form.cleaned_data["distance"]
+
+        if Registration.objects.filter(event=event, runner=runner, distance=distance).exists():
+            messages.error(self.request, "You are already registered for this event.")
+            return redirect("event:my_registrations_list")
+
+        return super().form_valid(form)
 
     def get_success_url(self) -> str:
         return reverse_lazy("event:my_registrations_list")

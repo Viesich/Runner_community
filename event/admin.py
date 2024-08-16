@@ -55,7 +55,7 @@ class RunnerAdmin(UserAdmin):
 
 @admin.register(Distance)
 class DistanceAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("km",)
 
 
 @admin.register(Event)
@@ -70,11 +70,10 @@ class RegistrationAdmin(admin.ModelAdmin):
     list_display = (
         "event_date",
         "event",
-        "distance",
         "runner",
     )
     search_fields = ("runner__last_name", "runner__first_name", "event__name")
-    list_filter = ("event__start_datetime", "event", "distance")
+    list_filter = ("event__start_datetime", "event",)
 
     def event_date(self, obj: Registration) -> datetime:
         return obj.event.start_datetime
@@ -93,9 +92,7 @@ class ResultAdmin(admin.ModelAdmin):
         "event_name",
         "event_date",
         "runner_last_name",
-        "distance",
         "time",
-        "position",
     )
     search_fields = (
         "registration__runner__last_name",
@@ -104,7 +101,7 @@ class ResultAdmin(admin.ModelAdmin):
     list_filter = (
         "registration__event__start_datetime",
         "registration__event",
-        "registration__distance",
+        "registration__distances",
     )
 
     def event_name(self, obj: Result) -> str:
@@ -123,6 +120,6 @@ class ResultAdmin(admin.ModelAdmin):
     runner_last_name.short_description = "Runner Last Name"
 
     def distance(self, obj: Result) -> int:
-        return obj.registration.distance
+        return obj.registration.distances
 
     distance.short_description = "Distance"
