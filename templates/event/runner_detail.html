@@ -1,14 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
+  
   <h1>{{ runner.first_name }} {{ runner.last_name }}</h1>
+  <div class="text-right mb-3">
+    {% if runner == user or user.is_staff  %}
+      <a href="{% url "event:runner_update" pk=runner.id %}" class="btn btn-primary mr-5">Update</a>
+      <a href="{% url "event:runner_delete" pk=runner.id %}" class="btn btn-danger">Delete</a>
+    {% endif %}
+  </div>
   <p><strong>username: </strong>{{ runner.username }}</p>
   <p><strong>date of birth: </strong>{{ runner.date_of_birth|date:"d.m.Y" }}</p>
   {% if runner.phone_number %}
     <p><strong>Phone number: </strong>{{ runner.phone_number|phone2numeric }}</p>
   {% endif %}
-  {% if runner == user or user.is_staff  %}
-    <a href="{% url "event:runner_update" pk=runner.id %}" class="btn btn-primary mr-5">Update</a>
-    <a href="{% url "event:runner_delete" pk=runner.id %}" class="btn btn-danger">Delete</a>
-  {% endif %}
+  <h1>Registrations</h1>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Date</th>
+        <th>Name registration</th>
+        <th>Distance</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for registration in registrations %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ registration.event.start_datetime|date:"d.m.Y, H:i" }}</td>
+          <td><a href="{% url 'event:event_detail' pk=registration.event.pk %}">{{ registration.event.name }}</a></td>
+          <td>{{ registration.distances }} км</td>
+          <td>{{ registration.event.location }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">Not registered for any events.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 {% endblock %}

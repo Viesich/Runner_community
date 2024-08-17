@@ -80,6 +80,12 @@ class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
     context_object_name = "runner"
     template_name = "event/runner_detail.html"
 
+    def get_context_data(self, **kwargs: dict) -> dict:
+        context = super().get_context_data(**kwargs)
+        runner = self.get_object()
+        context['registrations'] = Registration.objects.filter(runner=runner).order_by("event__start_datetime")
+        return context
+
 
 class RunnerRegisterView(generic.CreateView):
     model = Runner
