@@ -158,3 +158,4 @@ class RegistrationForm(forms.ModelForm):
         fields = [
             "distances",
         ]
+

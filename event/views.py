@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.http import HttpResponse, HttpRequest
 from django.views import generic
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,7 +11,8 @@ from event.forms import (
     RunnerUpdateForm,
     EventCreationForm,
     EventSearchForm,
-    RegistrationCreationForm, RegistrationForm,
+    RegistrationForm,
+    # RegistrationUpdateForm,
 )
 from event.models import Event, Runner, Registration, Distance
 from django.urls import reverse_lazy, reverse
@@ -162,16 +162,18 @@ class MyRegistrationsView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs: dict) -> dict[Event]:
         context = super().get_context_data(**kwargs)
+        context["runner"] = self.request.user
         context["events"] = Event.objects.filter(
             id__in=context["registrations"].values("event")
         )
+        context["runner_id"] = context["runner"].pk
         return context
 
 
 class RegistrationCreateView(LoginRequiredMixin, generic.CreateView):
     model = Registration
     form_class = RegistrationForm
-    template_name = "event/registration_form.html"
+    # template_name = "event/registration_form.html"
 
     def get_form_kwargs(self) -> dict:
         kwargs = super().get_form_kwargs()
@@ -189,6 +191,21 @@ class RegistrationCreateView(LoginRequiredMixin, generic.CreateView):
         form.instance.event = event
         form.instance.runner = runner
         return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse_lazy("event:my_registrations_list")
+
+
+class RegistrationUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Registration
+    form_class = RegistrationForm
+    template_name = 'event/registration_form.html'
+
+    def get_form_kwargs(self) -> dict:
+        kwargs = super().get_form_kwargs()
+        registration = self.get_object()
+        kwargs['event_id'] = registration.event.id
+        return kwargs
 
     def get_success_url(self) -> str:
         return reverse_lazy("event:my_registrations_list")

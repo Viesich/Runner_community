@@ -7,6 +7,9 @@
   <p><strong>Date: </strong>{{ event.start_datetime|date:"d.m.Y, l" }}</p>
   <p><strong>Time: </strong>{{ event.start_datetime|date:"H:i" }}</p>
   <p><strong>Description: </strong>{{ event.description|linebreaks }}</p>
+  {% if runner == user or user.is_staff  %}
+    <td><a href="{% url 'event:registration_create' event_id=event.id %}" class="btn btn-primary">registration</a></td>
+  {% endif %}
   
   {% if runner.is_staff %}
     <a href="{% url "event:event_update" pk=event.id %}" class="btn btn-primary mr-5">Update</a>

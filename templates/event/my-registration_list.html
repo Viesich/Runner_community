@@ -9,6 +9,10 @@
         <th>Name registration</th>
         <th>Distance</th>
         <th>Location</th>
+        {% if runner == user or user.is_staff %}
+          <th>Update</th>
+          <th>Delete</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -19,6 +23,10 @@
           <td><a href="{% url 'event:event_detail' pk=registration.event.pk %}">{{ registration.event.name }}</a></td>
           <td>{{ registration.distances }} км</td>
           <td>{{ registration.event.location }}</td>
+          {% if runner == user or user.is_staff %}
+            <th><a href="{% url 'event:registration_update' registration.id %}" class="btn btn-primary">Update</a></th>
+{#            <th><a href="{% url '' %}" class="btn btn-danger"></a>Delete</th>#}
+          {% endif %}
         </tr>
       {% empty %}
         <tr>

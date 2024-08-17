@@ -12,6 +12,7 @@ from event.views import (
     RunnerDeleteView,
     EventRegistrationListView,
     RegistrationCreateView,
+    RegistrationUpdateView,
     MyRegistrationsView,
     RunnerRegisterView,
 )
@@ -68,4 +69,19 @@ urlpatterns = [
         RegistrationCreateView.as_view(),
         name="registration_create",
     ),
+    path(
+        "registrations/<int:pk>/update/",
+        RegistrationUpdateView.as_view(),
+        name="registration_update",
+    ),
+    # path(
+    #     "registrations/<int:pk>/delete/",
+    #     RegistrationUpdateView.as_view(),
+    #     name="registration_update",
+    # ),
+    # path(
+    #     "registrations/<int:event_id>/create/",
+    #     RegistrationCreateView.as_view(),
+    #     name="registration_create",
+    # ),
 ]
