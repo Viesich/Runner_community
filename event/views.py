@@ -97,12 +97,6 @@ class RunnerUpdateView(LoginRequiredMixin, generic.UpdateView):
         runner = self.object
         return reverse("event:runner_detail", kwargs={"pk": runner.pk})
 
-    def get_object(self, queryset: Runner = None) -> Runner:
-        obj = super().get_object(queryset)
-        if obj != self.request.user and not self.request.user.is_staff:
-            raise PermissionDenied
-        return obj
-
     def form_valid(self, form: EventCreationForm) -> HttpResponse:
         response = super().form_valid(form)
         update_session_auth_hash(self.request, self.object)
@@ -113,12 +107,6 @@ class RunnerDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Runner
     template_name = "event/runner_confirm_delete.html"
     success_url = reverse_lazy("event:index")
-
-    def get_object(self, queryset: Runner = None) -> Runner:
-        obj = super().get_object(queryset)
-        if obj != self.request.user and not self.request.user.is_staff:
-            raise PermissionDenied
-        return obj
 
 
 class EventRegistrationListView(LoginRequiredMixin, generic.ListView):
@@ -209,3 +197,9 @@ class RegistrationUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self) -> str:
         return reverse_lazy("event:my_registrations_list")
+
+
+class RegistrationDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Registration
+    template_name = "event/registration_confirm_delete.html"
+    success_url = reverse_lazy("event:my_registrations_list")

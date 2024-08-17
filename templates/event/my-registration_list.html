@@ -25,7 +25,7 @@
           <td>{{ registration.event.location }}</td>
           {% if runner == user or user.is_staff %}
             <th><a href="{% url 'event:registration_update' registration.id %}" class="btn btn-primary">Update</a></th>
-{#            <th><a href="{% url '' %}" class="btn btn-danger"></a>Delete</th>#}
+            <th><a href="{% url 'event:registration_delete' registration.id %}" class="btn btn-danger">Delete</a></th>
           {% endif %}
         </tr>
       {% empty %}
