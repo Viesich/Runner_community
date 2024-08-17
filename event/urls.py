@@ -79,9 +79,4 @@ urlpatterns = [
         RegistrationDeleteView.as_view(),
         name="registration_delete",
     ),
-    # path(
-    #     "registrations/<int:event_id>/create/",
-    #     RegistrationCreateView.as_view(),
-    #     name="registration_create",
-    # ),
 ]

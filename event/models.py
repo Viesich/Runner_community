@@ -83,7 +83,7 @@ class Registration(models.Model):
         Runner, on_delete=models.CASCADE, related_name="registrations"
     )
     registration_date = models.DateTimeField(auto_now_add=True)
-    distances = models.ForeignKey(Distance, on_delete=models.CASCADE, default=5)
+    distances = models.ForeignKey(Distance, on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
 
     def __str__(self) -> str:

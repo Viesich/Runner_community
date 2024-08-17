@@ -1,7 +1,6 @@
 from django.http import HttpResponse, HttpRequest
 from django.views import generic
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import PermissionDenied
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,7 +11,6 @@ from event.forms import (
     EventCreationForm,
     EventSearchForm,
     RegistrationForm,
-    # RegistrationUpdateForm,
 )
 from event.models import Event, Runner, Registration, Distance
 from django.urls import reverse_lazy, reverse
@@ -20,7 +18,7 @@ from django.urls import reverse_lazy, reverse
 
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
-    event_type = request.GET.get('event_type')
+    event_type = request.GET.get("event_type")
     if event_type:
         events = Event.objects.filter(event_type=event_type)
     else:
@@ -87,7 +85,10 @@ class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         runner = self.get_object()
-        context['registrations'] = Registration.objects.filter(runner=runner).order_by("event__start_datetime")
+        context["registrations"] = (
+            Registration.objects.filter(runner=runner)
+            .order_by("event__start_datetime")
+        )
         return context
 
 
@@ -127,8 +128,7 @@ class EventRegistrationListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self) -> Registration:
         event_id = self.kwargs["pk"]
         return (
-            Registration.objects
-            .filter(event_id=event_id)
+            Registration.objects.filter(event_id=event_id)
             .order_by("distances")
         )
 
@@ -175,11 +175,11 @@ class RegistrationCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_form_kwargs(self) -> dict:
         kwargs = super().get_form_kwargs()
-        kwargs['event_id'] = self.kwargs['event_id']
+        kwargs["event_id"] = self.kwargs["event_id"]
         return kwargs
 
-    def form_valid(self, form):
-        event = get_object_or_404(Event, id=self.kwargs['event_id'])
+    def form_valid(self, form: EventCreationForm) -> HttpResponse:
+        event = get_object_or_404(Event, id=self.kwargs["event_id"])
         runner = self.request.user
 
         if Registration.objects.filter(event=event, runner=runner).exists():
@@ -197,12 +197,12 @@ class RegistrationCreateView(LoginRequiredMixin, generic.CreateView):
 class RegistrationUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Registration
     form_class = RegistrationForm
-    template_name = 'event/registration_form.html'
+    template_name = "event/registration_form.html"
 
     def get_form_kwargs(self) -> dict:
         kwargs = super().get_form_kwargs()
         registration = self.get_object()
-        kwargs['event_id'] = registration.event.id
+        kwargs["event_id"] = registration.event.id
         return kwargs
 
     def get_success_url(self) -> str:
