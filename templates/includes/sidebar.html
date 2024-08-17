@@ -38,12 +38,12 @@
     <a href="{% url 'event:index' %}">Home</a>
   </li>
   <li class="list-group-item">
-    <a href="#">Running</a>
+    <a href="{% url 'event:index' %}?event_type=Running">Running</a>
   </li>
   <li class="list-group-item">
-    <a href="#">Cycling</a>
+    <a href="{% url 'event:index' %}?event_type=Cycling">Cycling</a>
   </li>
   <li class="list-group-item">
-    <a href="#">Swimming</a>
+    <a href="{% url 'event:index' %}?event_type=Swimming">Swimming</a>
   </li>
 </ul>

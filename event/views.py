@@ -20,7 +20,11 @@ from django.urls import reverse_lazy, reverse
 
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
-    events = Event.objects.all()
+    event_type = request.GET.get('event_type')
+    if event_type:
+        events = Event.objects.filter(event_type=event_type)
+    else:
+        events = Event.objects.all()
     form = EventSearchForm(request.GET)
     distances = Distance.objects.all()
     if form.is_valid():

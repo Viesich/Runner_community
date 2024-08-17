@@ -107,7 +107,7 @@ class EventCreationForm(forms.ModelForm):
     )
     distances = forms.ModelMultipleChoiceField(
         queryset=Distance.objects.all(),
-        widget=forms.Select,
+        widget=forms.CheckboxSelectMultiple,
         label="Distances",
     )
 
