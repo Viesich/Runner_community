@@ -65,6 +65,8 @@ class Event(models.Model):
     def save(self, *args: tuple, **kwargs: dict) -> None:
         if self.start_datetime <= timezone.now():
             self.is_active = False
+        else:
+            self.is_active = True
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:

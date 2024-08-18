@@ -1,8 +1,8 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 from event.forms import (
     RunnerCreationForm,
@@ -15,14 +15,17 @@ from event.models import Event, Runner, Registration, Distance
 from django.urls import reverse_lazy, reverse
 
 
-class EventListView(LoginRequiredMixin, generic.ListView):
+class BaseEventListView(LoginRequiredMixin, generic.ListView):
     model = Event
-    template_name = "event/index.html"
-    context_object_name = "events"
+    context_object_name = 'events'
     paginate_by = 2
 
     def get_queryset(self):
-        queryset = Event.objects.filter(is_active=True)
+        queryset = Event.objects.all()
+        is_active = self.get_is_active()
+        if is_active is not None:
+            queryset = queryset.filter(is_active=is_active)
+
         event_type = self.request.GET.get("event_type")
         if event_type:
             queryset = queryset.filter(event_type=event_type)
@@ -44,6 +47,23 @@ class EventListView(LoginRequiredMixin, generic.ListView):
         for event in context["events"]:
             event.registration_count = event.registrations.count()
         return context
+
+    def get_is_active(self):
+        return True
+
+
+class EventListView(BaseEventListView):
+    template_name = 'event/index.html'
+
+    def get_is_active(self):
+        return True
+
+
+class ArchiveListView(BaseEventListView):
+    template_name = 'event/archive_list.html'
+
+    def get_is_active(self):
+        return False
 
 
 class EventDetailView(LoginRequiredMixin, generic.DetailView):

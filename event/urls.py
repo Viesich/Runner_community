@@ -16,6 +16,7 @@ from event.views import (
     MyRegistrationsView,
     RunnerRegisterView,
     RegistrationDeleteView,
+    ArchiveListView,
 )
 
 app_name = "event"
@@ -79,5 +80,20 @@ urlpatterns = [
         "registrations/<int:pk>/delete/",
         RegistrationDeleteView.as_view(),
         name="registration_delete",
+    ),
+    path(
+        "",
+        RegistrationDeleteView.as_view(),
+        name="registration_delete",
+    ),
+    path(
+        "registrations/<int:pk>/delete/",
+        RegistrationDeleteView.as_view(),
+        name="registration_delete",
+    ),
+    path(
+        "archive/",
+        ArchiveListView.as_view(),
+        name="archive_list",
     ),
 ]
