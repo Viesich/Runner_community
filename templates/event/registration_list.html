@@ -13,6 +13,7 @@
                 <th>№</th>
                 <th>Distance</th>
                 <th>runners full name</th>
+                <th>Age</th>
                 <th>City</th>
             </tr>
         </thead>
@@ -24,8 +25,8 @@
                     <td>
                       <a href="{% url 'event:runner_detail' pk=registration.runner.id %}">{{ registration.runner }}</a>
                     </td>
+                    <td>{{ registration.runner.get_age }}</td>
                     <td>{{ registration.runner.city }}</td>
-                    
                 </tr>
             {% empty %}
                 <tr>

@@ -1,8 +1,7 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse
 from django.views import generic
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from event.forms import (
@@ -16,28 +15,35 @@ from event.models import Event, Runner, Registration, Distance
 from django.urls import reverse_lazy, reverse
 
 
-@login_required
-def index(request: HttpRequest) -> HttpResponse:
-    event_type = request.GET.get("event_type")
-    if event_type:
-        events = Event.objects.filter(event_type=event_type)
-    else:
-        events = Event.objects.all()
-    form = EventSearchForm(request.GET)
-    distances = Distance.objects.all()
-    if form.is_valid():
-        name = form.cleaned_data.get("name", "")
-        location = form.cleaned_data.get("location", "")
-        if name:
-            events = events.filter(name__icontains=name)
-        if location:
-            events = events.filter(location__icontains=location)
-    context = {
-        "events": events,
-        "search_form": form,
-        "distances": distances,
-    }
-    return render(request, "event/index.html", context)
+class EventListView(LoginRequiredMixin, generic.ListView):
+    model = Event
+    template_name = "event/index.html"
+    context_object_name = "events"
+    paginate_by = 2
+
+    def get_queryset(self):
+        queryset = Event.objects.filter(is_active=True)
+        event_type = self.request.GET.get("event_type")
+        if event_type:
+            queryset = queryset.filter(event_type=event_type)
+
+        form = EventSearchForm(self.request.GET)
+        if form.is_valid():
+            name = form.cleaned_data.get("name", "")
+            location = form.cleaned_data.get("location", "")
+            if name:
+                queryset = queryset.filter(name__icontains=name)
+            if location:
+                queryset = queryset.filter(location__icontains=location)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = EventSearchForm(self.request.GET)
+        context["distances"] = Distance.objects.all()
+        for event in context["events"]:
+            event.registration_count = event.registrations.count()
+        return context
 
 
 class EventDetailView(LoginRequiredMixin, generic.DetailView):

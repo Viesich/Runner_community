@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
@@ -19,6 +21,16 @@ class Runner(AbstractUser):
 
     def __str__(self) -> str:
         return f"{self.last_name} {self.first_name}"
+
+    def get_age(self) -> int:
+        today = datetime.today()
+        age = today.year - self.date_of_birth.year
+        if (
+                today.month < self.date_of_birth.month
+                or (today.month == self.date_of_birth.month and today.day < self.date_of_birth.day)
+        ):
+            age -= 1
+        return age
 
 
 class Distance(models.Model):
