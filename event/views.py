@@ -18,7 +18,7 @@ from django.urls import reverse_lazy, reverse
 class BaseEventListView(LoginRequiredMixin, generic.ListView):
     model = Event
     context_object_name = 'events'
-    paginate_by = 2
+    paginate_by = 7
 
     def get_queryset(self):
         queryset = Event.objects.all()
@@ -58,12 +58,22 @@ class EventListView(BaseEventListView):
     def get_is_active(self):
         return True
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['segment'] = 'events'
+        return context
+
 
 class ArchiveListView(BaseEventListView):
     template_name = 'event/archive_list.html'
 
     def get_is_active(self):
         return False
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['segment'] = 'archive'
+        return context
 
 
 class EventDetailView(LoginRequiredMixin, generic.DetailView):

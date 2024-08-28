@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 {% load crispy_forms_filters %}
 {% block content %}
   
@@ -9,48 +9,72 @@
   {% endif %}
   <form method="get" action="" class="form-inline">
     {{ search_form|crispy }}
-    <input type="submit" value="🧐" class="btn btn-secondary" formnovalidate>
+    <input type="submit" value="Search" class="btn btn-primary" formnovalidate>
   </form>
-  <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Date race</th>
-        <th>Name race</th>
-        <th>Location</th>
-        <th>Distances</th>
-        <th>Organiser</th>
-          <th>Participants</th>
-        {% if not user.is_staff %}
-          <th>Registration</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for event in events %}
+  <br>
+  <div class="table-container">
+    <table class="table table-striped table-hover">
+      <colgroup>
+        <col class="col-date" style="width: 8%;">
+        <col class="col-name" style="width: 30%;">
+        <col class="col-location" style="width: 15%;">
+        <col class="col-distances" style="width: 10%;">
+        <col class="col-organiser" style="width: 8%;">
+        <col class="col-participants" style="width: 10%;">
+        <col class="col-registration" style="width: 8%;">
+      </colgroup>
+      <thead>
         <tr>
-          <td>{{ event.start_datetime|date:"d.m.Y, l" }}</td>
-          <td><a href="{% url 'event:event_detail' pk=event.id %}">{{ event.name }}</a></td>
-          <td>{{ event.location }}</td>
-          <td>
-            {% for distance in event.get_distances %}
-              {{ distance }} km{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </td>
-          <td>{{ event.organiser }}</td>
-          <td>
-            <a href="{% url 'event:registration_list' pk=event.id %}" class="btn btn-secondary">
-              Number of participants: {{ event.registration_count }}
-            </a>
-          </td>
+          <th class="th-date">Date race</th>
+          <th class="th-name">Name race</th>
+          <th class="th-location">Location</th>
+          <th class="th-distances">Distances</th>
+          <th class="th-organiser">Organiser</th>
+          <th class="th-participants">Participants</th>
           {% if not user.is_staff %}
-            <td>
-              <a href="{% url 'event:registration_create' event_id=event.id %}" class="btn btn-primary">
-                registration
-              </a>
-            </td>
+            <th class="th-registration">Registration</th>
+          {% else %}
+            <th class="th-registration">Update</th>
           {% endif %}
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for event in events %}
+          <tr>
+            <td class="td-date">{{ event.start_datetime|date:"d.m.Y, l" }}</td>
+            <td class="td-name">
+              <a href="{% url 'event:event_detail' pk=event.id %}" class="btn btn-outline-gray-800 btn-custom-width">
+                {{ event.name }}
+              </a>
+            </td>
+            <td class="td-location">{{ event.location }}</td>
+            <td class="td-distances">
+              {% for distance in event.get_distances %}
+                {{ distance }} km{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+            <td class="td-organiser">{{ event.organiser }}</td>
+            <td class="td-participants">
+              <a href="{% url 'event:registration_list' pk=event.id %}" class="btn btn-outline-gray-800">
+                Participants: {{ event.registration_count }}
+              </a>
+            </td>
+            {% if not user.is_staff %}
+              <td class="td-registration">
+                <a href="{% url 'event:registration_create' event_id=event.id %}" class="btn btn-outline-gray-800">
+                  registration
+                </a>
+              </td>
+            {% else %}
+              <td class="td-update">
+                <a href="{% url "event:event_update" pk=event.id %}" class="btn btn-outline-gray-800 mr-5">
+                  Update
+                </a>
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

@@ -27,6 +27,8 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ASSETS_ROOT = "/static/assets"
+
 ALLOWED_HOSTS = []
 
 INTERNAL_IPS = [
@@ -73,6 +75,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "event.context_processors.cfg_assets_root"
             ],
         },
     },

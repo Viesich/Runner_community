@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 {% block content %}
 <h1>My registrations</h1>
   <table class="table table-striped table-hover">
@@ -20,7 +20,11 @@
         <tr>
           <td>{{ forloop.counter }}</td>
           <td>{{ registration.event.start_datetime|date:"d.m.Y, H:i" }}</td>
-          <td><a href="{% url 'event:event_detail' pk=registration.event.pk %}">{{ registration.event.name }}</a></td>
+          <td>
+            <a href="{% url 'event:event_detail' pk=registration.event.pk %}" class="btn btn-outline-gray-800 btn-custom-width">
+              {{ registration.event.name }}
+            </a>
+          </td>
           <td>{{ registration.distances }} км</td>
           <td>{{ registration.event.location }}</td>
           {% if runner == user or user.is_staff %}
