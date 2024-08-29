@@ -73,22 +73,6 @@ class Event(models.Model):
         return self.name
 
 
-class Result(models.Model):
-    registration = models.ForeignKey(
-        "Registration",
-        on_delete=models.CASCADE,
-        related_name="results",
-    )
-    time = models.TimeField()
-
-    def __str__(self) -> str:
-        return (
-            f"{self.registration.runner.last_name} "
-            f"{self.registration.runner.first_name} "
-            f"{self.time}"
-        )
-
-
 class Registration(models.Model):
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="registrations"
