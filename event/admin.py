@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from event.models import Event, Registration, Result, Runner, Distance
+from event.models import Event, Registration, Runner, Distance
 
 
 @admin.register(Runner)
@@ -11,6 +11,7 @@ class RunnerAdmin(UserAdmin):
     list_display = (
         "full_name",
         "username",
+        "city",
         "gender",
         "date_of_birth",
         "phone_number",
@@ -22,6 +23,7 @@ class RunnerAdmin(UserAdmin):
                 {
                     "fields": (
                         "date_of_birth",
+                        "city",
                         "gender",
                         "phone_number",
                     )
@@ -94,41 +96,3 @@ class RegistrationAdmin(admin.ModelAdmin):
 
     runner.short_description = "Runner"
 
-
-@admin.register(Result)
-class ResultAdmin(admin.ModelAdmin):
-    list_display = (
-        "event_name",
-        "event_date",
-        "runner_last_name",
-        "time",
-    )
-    search_fields = (
-        "registration__runner__last_name",
-        "registration__runner__first_name",
-    )
-    list_filter = (
-        "registration__event__start_datetime",
-        "registration__event",
-        "registration__distances",
-    )
-
-    def event_name(self, obj: Result) -> str:
-        return obj.registration.event.name
-
-    event_name.short_description = "Event Name"
-
-    def event_date(self, obj: Result) -> datetime:
-        return obj.registration.event.start_datetime
-
-    event_date.short_description = "Event Date"
-
-    def runner_last_name(self, obj: Result) -> str:
-        return obj.registration.runner.last_name
-
-    runner_last_name.short_description = "Runner Last Name"
-
-    def distance(self, obj: Result) -> int:
-        return obj.registration.distances.km
-
-    distance.short_description = "Distance"
