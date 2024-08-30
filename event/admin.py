@@ -9,7 +9,6 @@ from event.models import Event, Registration, Runner, Distance
 @admin.register(Runner)
 class RunnerAdmin(UserAdmin):
     list_display = (
-        "full_name",
         "username",
         "city",
         "gender",
