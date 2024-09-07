@@ -111,6 +111,7 @@ class RunnerListView(LoginRequiredMixin, generic.ListView):
     model = Runner
     context_object_name = "runners"
     template_name = "event/runner_list.html"
+    ordering = ['last_name', 'first_name']
 
 
 class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
