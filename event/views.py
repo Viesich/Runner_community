@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
+from django.utils import timezone
 from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import update_session_auth_hash
@@ -55,8 +56,12 @@ class BaseEventListView(LoginRequiredMixin, generic.ListView):
 class EventListView(BaseEventListView):
     template_name = 'event/index.html'
 
-    def get_is_active(self):
-        return True
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        event_type = self.request.GET.get("event_type")
+        if event_type:
+            queryset = queryset.filter(event_type=event_type)
+        return queryset.filter(start_datetime__gt=timezone.now(), is_active=True)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
