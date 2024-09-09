@@ -45,10 +45,7 @@ class PrivateRunnersViewsTests(TestCase):
         self.assertEqual(res.status_code, 200)
 
         runners = Runner.objects.all()
-        self.assertEqual(
-            list(res.context["runners"]),
-            list(runners)
-        )
+        self.assertEqual(list(res.context["runners"]), list(runners))
         self.assertTemplateUsed(res, "event/runner_list.html")
 
     def test_runner_list_view_status_code(self):
@@ -70,7 +67,9 @@ class PublicRunnerDetailViewTests(TestCase):
             date_of_birth="2000-01-01",
             gender="Male",
         )
-        self.runner_detail_url = reverse("event:runner_detail", kwargs={"pk": self.runner.pk})
+        self.runner_detail_url = reverse(
+            "event:runner_detail", kwargs={"pk": self.runner.pk}
+        )
 
     def test_login_required(self):
         res = self.client.get(self.runner_detail_url)
@@ -94,7 +93,9 @@ class PrivateRunnerDetailViewTests(TestCase):
             date_of_birth="2000-01-01",
             gender="Male",
         )
-        self.runner_detail_url = reverse("event:runner_detail", kwargs={"pk": self.runner.pk})
+        self.runner_detail_url = reverse(
+            "event:runner_detail", kwargs={"pk": self.runner.pk}
+        )
 
     def test_retrieve_runner_detail(self):
         res = self.client.get(self.runner_detail_url)

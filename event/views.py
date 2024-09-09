@@ -18,7 +18,7 @@ from django.urls import reverse_lazy, reverse
 
 class BaseEventListView(LoginRequiredMixin, generic.ListView):
     model = Event
-    context_object_name = 'events'
+    context_object_name = "events"
     paginate_by = 7
 
     def get_queryset(self):
@@ -54,7 +54,7 @@ class BaseEventListView(LoginRequiredMixin, generic.ListView):
 
 
 class EventListView(BaseEventListView):
-    template_name = 'event/index.html'
+    template_name = "event/index.html"
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -65,19 +65,19 @@ class EventListView(BaseEventListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['segment'] = 'events'
+        context["segment"] = "events"
         return context
 
 
 class ArchiveListView(BaseEventListView):
-    template_name = 'event/archive_list.html'
+    template_name = "event/archive_list.html"
 
     def get_is_active(self):
         return False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['segment'] = 'archive'
+        context["segment"] = "archive"
         return context
 
 
@@ -116,7 +116,7 @@ class RunnerListView(LoginRequiredMixin, generic.ListView):
     model = Runner
     context_object_name = "runners"
     template_name = "event/runner_list.html"
-    ordering = ['last_name', 'first_name']
+    ordering = ["last_name", "first_name"]
 
 
 class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
@@ -127,9 +127,8 @@ class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         runner = self.get_object()
-        context["registrations"] = (
-            Registration.objects.filter(runner=runner)
-            .order_by("event__start_datetime")
+        context["registrations"] = Registration.objects.filter(runner=runner).order_by(
+            "event__start_datetime"
         )
         return context
 
@@ -169,10 +168,7 @@ class EventRegistrationListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self) -> Registration:
         event_id = self.kwargs["pk"]
-        return (
-            Registration.objects.filter(event_id=event_id)
-            .order_by("distances")
-        )
+        return Registration.objects.filter(event_id=event_id).order_by("distances")
 
     def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)

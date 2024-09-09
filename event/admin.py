@@ -81,9 +81,12 @@ class RegistrationAdmin(admin.ModelAdmin):
         "event__name",
         "runner__last_name",
         "runner__first_name",
-
     )
-    list_filter = ("event__start_datetime", "runner", "distances", )
+    list_filter = (
+        "event__start_datetime",
+        "runner",
+        "distances",
+    )
 
     def event_date(self, obj: Registration) -> datetime:
         return obj.event.start_datetime
@@ -94,4 +97,3 @@ class RegistrationAdmin(admin.ModelAdmin):
         return f"{obj.runner.last_name} {obj.runner.first_name}"
 
     runner.short_description = "Runner"
-

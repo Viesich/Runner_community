@@ -8,7 +8,11 @@ from event.models import Runner, Distance, Event, Registration
 class ModelsTests(TestCase):
 
     def test_runner_str(self):
-        date_of_birth = date(2000, 1, 1,)
+        date_of_birth = date(
+            2000,
+            1,
+            1,
+        )
         runner = get_user_model().objects.create(
             first_name="Test_first",
             last_name="Test_last",
@@ -17,10 +21,7 @@ class ModelsTests(TestCase):
             gender="Test_gender",
             password="password123",
         )
-        self.assertEqual(
-            str(runner),
-            f"{runner.last_name} {runner.first_name}"
-        )
+        self.assertEqual(str(runner), f"{runner.last_name} {runner.first_name}")
 
     def test_create_runner_with_city_and_phone_number(self):
         username = "testuser"
@@ -69,7 +70,14 @@ class ModelsTests(TestCase):
 
     def test_event_str(self):
         distance = Distance.objects.create(km=20)
-        start_date = datetime(2024, 10, 10, 12, 0, 0,)
+        start_date = datetime(
+            2024,
+            10,
+            10,
+            12,
+            0,
+            0,
+        )
         event = Event.objects.create(
             name="Test",
             start_datetime=start_date,
@@ -84,7 +92,14 @@ class ModelsTests(TestCase):
         distance1 = Distance.objects.create(km=10)
         distance2 = Distance.objects.create(km=21)
         distance3 = Distance.objects.create(km=42)
-        start_date = datetime(2024, 10, 10, 12, 0, 0, )
+        start_date = datetime(
+            2024,
+            10,
+            10,
+            12,
+            0,
+            0,
+        )
         event = Event.objects.create(
             name="Test",
             start_datetime=start_date,
@@ -135,7 +150,14 @@ class ModelsTests(TestCase):
     def test_registration_str(self):
 
         distance = Distance.objects.create(km=20)
-        start_date = datetime(2024, 10, 10, 12, 0, 0, )
+        start_date = datetime(
+            2024,
+            10,
+            10,
+            12,
+            0,
+            0,
+        )
         event = Event.objects.create(
             name="Test",
             start_datetime=start_date,
@@ -145,7 +167,11 @@ class ModelsTests(TestCase):
         )
         event.distances.add(distance)
 
-        date_of_birth = date(2000, 1, 1, )
+        date_of_birth = date(
+            2000,
+            1,
+            1,
+        )
         runner = get_user_model().objects.create(
             first_name="Test_first",
             last_name="Test_last",
@@ -159,4 +185,6 @@ class ModelsTests(TestCase):
             runner=runner,
             distances=distance,
         )
-        self.assertEqual(str(registration), f"{runner.last_name} {runner.first_name} - {event.name}")
+        self.assertEqual(
+            str(registration), f"{runner.last_name} {runner.first_name} - {event.name}"
+        )

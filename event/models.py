@@ -25,9 +25,9 @@ class Runner(AbstractUser):
     def get_age(self) -> int:
         today = datetime.today()
         age = today.year - self.date_of_birth.year
-        if (
-                today.month < self.date_of_birth.month
-                or (today.month == self.date_of_birth.month and today.day < self.date_of_birth.day)
+        if today.month < self.date_of_birth.month or (
+            today.month == self.date_of_birth.month
+            and today.day < self.date_of_birth.day
         ):
             age -= 1
         return age

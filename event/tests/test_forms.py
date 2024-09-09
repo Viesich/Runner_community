@@ -8,7 +8,7 @@ from event.forms import (
     RegistrationCreationForm,
     EventCreationForm,
     EventSearchForm,
-    RegistrationForm
+    RegistrationForm,
 )
 from event.models import Runner, Event, Distance, Registration
 
@@ -16,34 +16,34 @@ from event.models import Runner, Event, Distance, Registration
 class RunnerCreationFormTests(TestCase):
     def test_runner_creation_form_valid_data(self):
         form_data = {
-            'username': 'new_user',
-            'first_name': 'Test_first',
-            'last_name': 'Test_last',
-            'city': 'Test_city',
-            'date_of_birth': '2000-01-01',
-            'gender': 'Male',
-            'password1': 'user12test',
-            'password2': 'user12test',
-            'phone_number': '1234567890'
+            "username": "new_user",
+            "first_name": "Test_first",
+            "last_name": "Test_last",
+            "city": "Test_city",
+            "date_of_birth": "2000-01-01",
+            "gender": "Male",
+            "password1": "user12test",
+            "password2": "user12test",
+            "phone_number": "1234567890",
         }
         form = RunnerCreationForm(data=form_data)
         self.assertTrue(form.is_valid())
 
     def test_runner_creation_form_passwords_not_matching(self):
         form_data = {
-            'username': 'new_user',
-            'first_name': 'Test_first',
-            'last_name': 'Test_last',
-            'city': 'Test_city',
-            'date_of_birth': '2000-01-01',
-            'gender': 'Male',
-            'password1': 'user12test',
-            'password2': 'wrongpassword',
-            'phone_number': '1234567890'
+            "username": "new_user",
+            "first_name": "Test_first",
+            "last_name": "Test_last",
+            "city": "Test_city",
+            "date_of_birth": "2000-01-01",
+            "gender": "Male",
+            "password1": "user12test",
+            "password2": "wrongpassword",
+            "phone_number": "1234567890",
         }
         form = RunnerCreationForm(data=form_data)
         self.assertFalse(form.is_valid())
-        self.assertIn('password2', form.errors)
+        self.assertIn("password2", form.errors)
 
 
 class RunnerUpdateFormTests(TestCase):
@@ -55,18 +55,18 @@ class RunnerUpdateFormTests(TestCase):
             date_of_birth="2000-01-01",
             city="Test City",
             gender="Male",
-            phone_number="1234567890"
+            phone_number="1234567890",
         )
 
     def test_runner_update_form_valid_data(self):
         form_data = {
-            'username': 'runner_test',
-            'first_name': 'Updated First',
-            'last_name': 'Updated Last',
-            'date_of_birth': '1995-01-01',
-            'city': 'Updated City',
-            'gender': 'Female',
-            'phone_number': '0987654321'
+            "username": "runner_test",
+            "first_name": "Updated First",
+            "last_name": "Updated Last",
+            "date_of_birth": "1995-01-01",
+            "city": "Updated City",
+            "gender": "Female",
+            "phone_number": "0987654321",
         }
         form = RunnerUpdateForm(instance=self.runner, data=form_data)
         self.assertTrue(form.is_valid())
@@ -80,7 +80,7 @@ class RegistrationCreationFormTests(TestCase):
             location="Kyiv",
             description="Test Description",
             event_type="Running",
-            organiser="New Run"
+            organiser="New Run",
         )
         self.distance1 = Distance.objects.create(km=5)
         self.distance2 = Distance.objects.create(km=10)
@@ -103,14 +103,14 @@ class EventCreationFormTests(TestCase):
 
     def test_event_creation_form_valid_data(self):
         form_data = {
-            'name': 'New Event',
-            'start_datetime': timezone.now().strftime('%Y-%m-%dT%H:%M'),
-            'location': 'Test Location',
-            'description': 'This is a test event',
-            'event_type': 'Running',
-            'organiser': 'Test Organiser',
-            'is_active': True,
-            'distances': [self.distance1.id, self.distance2.id]
+            "name": "New Event",
+            "start_datetime": timezone.now().strftime("%Y-%m-%dT%H:%M"),
+            "location": "Test Location",
+            "description": "This is a test event",
+            "event_type": "Running",
+            "organiser": "Test Organiser",
+            "is_active": True,
+            "distances": [self.distance1.id, self.distance2.id],
         }
         form = EventCreationForm(data=form_data)
         self.assertTrue(form.is_valid())
@@ -118,7 +118,7 @@ class EventCreationFormTests(TestCase):
 
 class EventSearchFormTests(TestCase):
     def test_event_search_form_valid_data(self):
-        form_data = {'name': 'Marathon', 'location': 'Kyiv'}
+        form_data = {"name": "Marathon", "location": "Kyiv"}
         form = EventSearchForm(data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -135,11 +135,13 @@ class RegistrationFormTests(TestCase):
             location="Kyiv",
             description="Test Description",
             event_type="Running",
-            organiser="New Run"
+            organiser="New Run",
         )
         self.distance = Distance.objects.create(km=5)
         self.event.distances.add(self.distance)
 
     def test_registration_form_valid_event_id(self):
         form = RegistrationForm(event_id=self.event.id)
-        self.assertEqual(list(form.fields['distances'].queryset), list(self.event.distances.all()))
+        self.assertEqual(
+            list(form.fields["distances"].queryset), list(self.event.distances.all())
+        )

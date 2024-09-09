@@ -24,7 +24,7 @@ class AdminSiteRunnerTests(TestCase):
             date_of_birth="2000-01-01",
             gender="Male",
             password="testrunner",
-            phone_number="0123456789"
+            phone_number="0123456789",
         )
 
     def test_runner_fields_displayed_in_changelist(self) -> None:
@@ -65,7 +65,7 @@ class AdminSiteDistanceTests(TestCase):
             date_of_birth="2000-01-01",
             gender="Male",
             password="testrunner",
-            phone_number="0123456789"
+            phone_number="0123456789",
         )
         self.client.force_login(self.admin_user)
         self.distance = Distance.objects.create(km=20)

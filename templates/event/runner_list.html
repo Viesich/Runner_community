@@ -18,7 +18,7 @@
           {% if not runner.is_staff %}
             <td>
               <a href="{% url 'event:runner_detail' pk=runner.id %}" class="btn btn-outline-gray-800 btn-custom-width">
-                {{ runner.first_name }} {{ runner.last_name }}
+                {{ runner.last_name }} {{ runner.first_name }}
               </a>
             </td>
             <td>{{ runner.username }}</td>
