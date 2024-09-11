@@ -1,10 +1,9 @@
 .venv
 .idea
-**__pycache__
+__pycache__
 db.sqlite3
 .flake8
 *.log
-__pycache__/
 *.pyc
 .idea/
 .vscode/
@@ -13,3 +12,10 @@ pip-wheel-metadata/
 media/
 .env
 settings_local.py
+python-skeletons/
+lib-dynload/
+python3.11/
+site-packages/
+db/
+extensions/
+static/
