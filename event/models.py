@@ -26,8 +26,8 @@ class Runner(AbstractUser):
         today = datetime.today()
         age = today.year - self.date_of_birth.year
         if today.month < self.date_of_birth.month or (
-            today.month == self.date_of_birth.month
-            and today.day < self.date_of_birth.day
+            today.month == self.date_of_birth.month and today.
+                day < self.date_of_birth.day
         ):
             age -= 1
         return age
@@ -61,6 +61,13 @@ class Event(models.Model):
 
     def get_distances(self) -> list[str]:
         return [distance.km for distance in self.distances.all()]
+
+    def update_is_active_status(self) -> None:
+        if self.start_datetime <= timezone.now():
+            self.is_active = False
+        else:
+            self.is_active = True
+        self.save()
 
     def save(self, *args: tuple, **kwargs: dict) -> None:
         if self.start_datetime <= timezone.now():

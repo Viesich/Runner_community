@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from event.forms import (
@@ -10,11 +9,11 @@ from event.forms import (
     EventSearchForm,
     RegistrationForm,
 )
-from event.models import Runner, Event, Distance, Registration
+from event.models import Runner, Event, Distance
 
 
 class RunnerCreationFormTests(TestCase):
-    def test_runner_creation_form_valid_data(self):
+    def test_runner_creation_form_valid_data(self) -> None:
         form_data = {
             "username": "new_user",
             "first_name": "Test_first",
@@ -29,7 +28,7 @@ class RunnerCreationFormTests(TestCase):
         form = RunnerCreationForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-    def test_runner_creation_form_passwords_not_matching(self):
+    def test_runner_creation_form_passwords_not_matching(self) -> None:
         form_data = {
             "username": "new_user",
             "first_name": "Test_first",
@@ -47,7 +46,7 @@ class RunnerCreationFormTests(TestCase):
 
 
 class RunnerUpdateFormTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.runner = Runner.objects.create(
             username="runner_test",
             first_name="Test",
@@ -58,7 +57,7 @@ class RunnerUpdateFormTests(TestCase):
             phone_number="1234567890",
         )
 
-    def test_runner_update_form_valid_data(self):
+    def test_runner_update_form_valid_data(self) -> None:
         form_data = {
             "username": "runner_test",
             "first_name": "Updated First",
@@ -73,7 +72,7 @@ class RunnerUpdateFormTests(TestCase):
 
 
 class RegistrationCreationFormTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.event = Event.objects.create(
             name="Marathon",
             start_datetime=timezone.now(),
@@ -86,22 +85,22 @@ class RegistrationCreationFormTests(TestCase):
         self.distance2 = Distance.objects.create(km=10)
         self.event.distances.add(self.distance1, self.distance2)
 
-    def test_registration_creation_form_valid_event_id(self):
+    def test_registration_creation_form_valid_event_id(self) -> None:
         form = RegistrationCreationForm(event_id=self.event.id)
         self.assertIn(self.distance1, form.fields["distances"].queryset)
         self.assertIn(self.distance2, form.fields["distances"].queryset)
 
-    def test_registration_creation_form_invalid_event_id(self):
+    def test_registration_creation_form_invalid_event_id(self) -> None:
         form = RegistrationCreationForm(event_id=999)
         self.assertEqual(form.fields["distances"].queryset.count(), 0)
 
 
 class EventCreationFormTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.distance1 = Distance.objects.create(km=5)
         self.distance2 = Distance.objects.create(km=10)
 
-    def test_event_creation_form_valid_data(self):
+    def test_event_creation_form_valid_data(self) -> None:
         form_data = {
             "name": "New Event",
             "start_datetime": timezone.now().strftime("%Y-%m-%dT%H:%M"),
@@ -117,18 +116,18 @@ class EventCreationFormTests(TestCase):
 
 
 class EventSearchFormTests(TestCase):
-    def test_event_search_form_valid_data(self):
+    def test_event_search_form_valid_data(self) -> None:
         form_data = {"name": "Marathon", "location": "Kyiv"}
         form = EventSearchForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-    def test_event_search_form_empty_data(self):
+    def test_event_search_form_empty_data(self) -> None:
         form = EventSearchForm(data={})
         self.assertTrue(form.is_valid())
 
 
 class RegistrationFormTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.event = Event.objects.create(
             name="Marathon",
             start_datetime=timezone.now(),
@@ -140,8 +139,9 @@ class RegistrationFormTests(TestCase):
         self.distance = Distance.objects.create(km=5)
         self.event.distances.add(self.distance)
 
-    def test_registration_form_valid_event_id(self):
+    def test_registration_form_valid_event_id(self) -> None:
         form = RegistrationForm(event_id=self.event.id)
         self.assertEqual(
-            list(form.fields["distances"].queryset), list(self.event.distances.all())
+            list(form.fields["distances"].queryset),
+            list(self.event.distances.all())
         )

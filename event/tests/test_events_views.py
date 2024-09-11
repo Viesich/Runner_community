@@ -11,13 +11,13 @@ ARCHIVE_URL = reverse("event:archive_list")
 
 
 class PublicEventsViewsTests(TestCase):
-    def test_login_required(self):
+    def test_login_required(self) -> None:
         res = self.client.get(EVENT_URL)
         self.assertNotEquals(res.status_code, 200)
 
 
 class PrivateEventsViewsTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = get_user_model().objects.create_user(
             username="testuser",
             password="test123",
@@ -25,7 +25,7 @@ class PrivateEventsViewsTests(TestCase):
         )
         self.client.force_login(self.user)
 
-    def test_retrieve_events(self):
+    def test_retrieve_events(self) -> None:
         start_date = datetime(
             2024,
             10,
@@ -67,16 +67,19 @@ class PrivateEventsViewsTests(TestCase):
         self.assertEqual(list(res.context["events"]), list(events))
         self.assertTemplateUsed(res, "event/index.html")
 
-    def test_event_list_view_status_code(self):
+    def test_event_list_view_status_code(self) -> None:
         response = self.client.get(EVENT_URL)
         self.assertEqual(response.status_code, 200)
 
-    def test_event_list_view_template_used(self):
+    def test_event_list_view_template_used(self) -> None:
         response = self.client.get(EVENT_URL)
         self.assertTemplateUsed(response, "event/index.html")
 
-    def test_event_list_view_search(self):
-        response = self.client.get(EVENT_URL, {"name": "Marathon", "location": "Kyiv"})
+    def test_event_list_view_search(self) -> None:
+        response = self.client.get(
+            EVENT_URL,
+            {"name": "Marathon", "location": "Kyiv"}
+        )
         self.assertContains(response, "Marathon")
         self.assertContains(response, "Kyiv")
         self.assertNotContains(response, "Half Marathon")
@@ -84,13 +87,13 @@ class PrivateEventsViewsTests(TestCase):
 
 
 class PublicArchiveViewsTests(TestCase):
-    def test_login_required(self):
+    def test_login_required(self) -> None:
         res = self.client.get(ARCHIVE_URL)
         self.assertNotEquals(res.status_code, 200)
 
 
 class PrivateArchiveViewsTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = get_user_model().objects.create_user(
             username="testuser",
             password="test123",
@@ -98,7 +101,7 @@ class PrivateArchiveViewsTests(TestCase):
         )
         self.client.force_login(self.user)
 
-    def test_retrieve_archive(self):
+    def test_retrieve_archive(self) -> None:
         start_date = datetime(
             2024,
             7,
@@ -138,17 +141,17 @@ class PrivateArchiveViewsTests(TestCase):
         self.assertEqual(list(res.context["events"]), list(events))
         self.assertTemplateUsed(res, "event/archive_list.html")
 
-    def test_archive_list_view_status_code(self):
+    def test_archive_list_view_status_code(self) -> None:
         response = self.client.get(ARCHIVE_URL)
         self.assertEqual(response.status_code, 200)
 
-    def test_archive_list_view_template_used(self):
+    def test_archive_list_view_template_used(self) -> None:
         response = self.client.get(ARCHIVE_URL)
         self.assertTemplateUsed(response, "event/archive_list.html")
 
 
 class PublicEventDetailViewTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.event = Event.objects.create(
             name="Marathon",
             start_datetime=datetime(2024, 10, 10, 12, 0, 0),
@@ -161,13 +164,13 @@ class PublicEventDetailViewTests(TestCase):
             "event:event_detail", kwargs={"pk": self.event.pk}
         )
 
-    def test_login_required(self):
+    def test_login_required(self) -> None:
         res = self.client.get(self.event_detail_url)
         self.assertNotEquals(res.status_code, 200)
 
 
 class PrivateEventDetailViewTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = get_user_model().objects.create_user(
             username="testuser",
             password="test123",
@@ -191,7 +194,7 @@ class PrivateEventDetailViewTests(TestCase):
             "event:event_detail", kwargs={"pk": self.event.pk}
         )
 
-    def test_retrieve_event_detail(self):
+    def test_retrieve_event_detail(self) -> None:
         res = self.client.get(self.event_detail_url)
 
         self.assertEqual(res.status_code, 200)
@@ -204,10 +207,10 @@ class PrivateEventDetailViewTests(TestCase):
         self.assertContains(res, "Kyiv")
         self.assertContains(res, "Test Description")
 
-    def test_event_detail_view_template_used(self):
+    def test_event_detail_view_template_used(self) -> None:
         response = self.client.get(self.event_detail_url)
         self.assertTemplateUsed(response, "event/event_detail.html")
 
-    def test_event_detail_view_context(self):
+    def test_event_detail_view_context(self) -> None:
         response = self.client.get(self.event_detail_url)
         self.assertEqual(response.context["event"], self.event)

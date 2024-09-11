@@ -8,7 +8,7 @@ from event.models import Runner, Registration, Event, Distance
 
 
 class PublicRegistrationsViewsTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.event = Event.objects.create(
             name="Marathon",
             start_datetime=datetime(2024, 10, 10, 12, 0, 0),
@@ -18,7 +18,7 @@ class PublicRegistrationsViewsTests(TestCase):
             organiser="New Run",
         )
 
-    def test_login_required(self):
+    def test_login_required(self) -> None:
         res = self.client.get(
             reverse("event:registration_list", kwargs={"pk": self.event.pk})
         )
@@ -26,7 +26,7 @@ class PublicRegistrationsViewsTests(TestCase):
 
 
 class PrivateRegistrationsViewsTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = get_user_model().objects.create_user(
             username="testuser",
             password="test123",
@@ -72,13 +72,13 @@ class PrivateRegistrationsViewsTests(TestCase):
             distances=self.distances,
         )
 
-    def test_retrieve_runners(self):
+    def test_retrieve_runners(self) -> None:
         url = reverse("event:registration_list", kwargs={"pk": self.event.pk})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Marathon")
 
-    def test_runner_list_view_template_used(self):
+    def test_runner_list_view_template_used(self) -> None:
         response = self.client.get(
             reverse("event:registration_list", kwargs={"pk": self.event.pk})
         )

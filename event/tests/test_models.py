@@ -7,7 +7,7 @@ from event.models import Runner, Distance, Event, Registration
 
 class ModelsTests(TestCase):
 
-    def test_runner_str(self):
+    def test_runner_str(self) -> None:
         date_of_birth = date(
             2000,
             1,
@@ -21,9 +21,12 @@ class ModelsTests(TestCase):
             gender="Test_gender",
             password="password123",
         )
-        self.assertEqual(str(runner), f"{runner.last_name} {runner.first_name}")
+        self.assertEqual(
+            str(runner),
+            f"{runner.last_name} {runner.first_name}"
+        )
 
-    def test_create_runner_with_city_and_phone_number(self):
+    def test_create_runner_with_city_and_phone_number(self) -> None:
         username = "testuser"
         first_name = "Test_first"
         last_name = "Test_last"
@@ -51,7 +54,7 @@ class ModelsTests(TestCase):
         self.assertEqual(runner.phone_number, phone_number)
         self.assertTrue(runner.check_password(password))
 
-    def test_get_age(self):
+    def test_get_age(self) -> None:
         birth_date = date(1999, 8, 29)
         runner = Runner.objects.create(
             username="testuser",
@@ -64,11 +67,11 @@ class ModelsTests(TestCase):
         expected_age = 25
         self.assertEqual(runner.get_age(), expected_age)
 
-    def test_distance_str(self):
+    def test_distance_str(self) -> None:
         distance = Distance.objects.create(km="20")
         self.assertEqual(str(distance), f"{distance.km} km")
 
-    def test_event_str(self):
+    def test_event_str(self) -> None:
         distance = Distance.objects.create(km=20)
         start_date = datetime(
             2024,
@@ -88,7 +91,7 @@ class ModelsTests(TestCase):
         event.distances.add(distance)
         self.assertEqual(str(event), event.name)
 
-    def test_get_distance(self):
+    def test_get_distance(self) -> None:
         distance1 = Distance.objects.create(km=10)
         distance2 = Distance.objects.create(km=21)
         distance3 = Distance.objects.create(km=42)
@@ -111,7 +114,7 @@ class ModelsTests(TestCase):
         expected_distances = [10, 21, 42]
         self.assertEqual(event.get_distances(), expected_distances)
 
-    def test_event_is_active_when_future_date(self):
+    def test_event_is_active_when_future_date(self) -> None:
         future_date = timezone.now() + timedelta(days=1)
         event = Event(
             name="Future Event",
@@ -123,7 +126,7 @@ class ModelsTests(TestCase):
         event.save()
         self.assertTrue(event.is_active)
 
-    def test_event_is_inactive_when_past_date(self):
+    def test_event_is_inactive_when_past_date(self) -> None:
         past_date = timezone.now() - timedelta(days=1)
         event = Event(
             name="Past Event",
@@ -135,7 +138,7 @@ class ModelsTests(TestCase):
         event.save()
         self.assertFalse(event.is_active)
 
-    def test_event_is_active_when_now(self):
+    def test_event_is_active_when_now(self) -> None:
         now = timezone.now()
         event = Event(
             name="Current Event",
@@ -147,7 +150,7 @@ class ModelsTests(TestCase):
         event.save()
         self.assertFalse(event.is_active)
 
-    def test_registration_str(self):
+    def test_registration_str(self) -> None:
 
         distance = Distance.objects.create(km=20)
         start_date = datetime(
@@ -186,5 +189,6 @@ class ModelsTests(TestCase):
             distances=distance,
         )
         self.assertEqual(
-            str(registration), f"{runner.last_name} {runner.first_name} - {event.name}"
+            str(registration),
+            f"{runner.last_name} {runner.first_name} - {event.name}"
         )

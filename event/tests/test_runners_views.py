@@ -8,13 +8,13 @@ RUNNER_URL = reverse("event:runner_list")
 
 
 class PublicRunnersViewsTests(TestCase):
-    def test_login_required(self):
+    def test_login_required(self) -> None:
         res = self.client.get(RUNNER_URL)
         self.assertNotEquals(res.status_code, 200)
 
 
 class PrivateRunnersViewsTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = get_user_model().objects.create_user(
             username="testuser",
             password="test123",
@@ -22,7 +22,7 @@ class PrivateRunnersViewsTests(TestCase):
         )
         self.client.force_login(self.user)
 
-    def test_retrieve_runners(self):
+    def test_retrieve_runners(self) -> None:
         Runner.objects.create(
             username="runner1",
             first_name="First 1",
@@ -48,17 +48,17 @@ class PrivateRunnersViewsTests(TestCase):
         self.assertEqual(list(res.context["runners"]), list(runners))
         self.assertTemplateUsed(res, "event/runner_list.html")
 
-    def test_runner_list_view_status_code(self):
+    def test_runner_list_view_status_code(self) -> None:
         response = self.client.get(RUNNER_URL)
         self.assertEqual(response.status_code, 200)
 
-    def test_runner_list_view_template_used(self):
+    def test_runner_list_view_template_used(self) -> None:
         response = self.client.get(RUNNER_URL)
         self.assertTemplateUsed(response, "event/runner_list.html")
 
 
 class PublicRunnerDetailViewTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.runner = Runner.objects.create(
             username="Testuser",
             first_name="Test",
@@ -71,13 +71,13 @@ class PublicRunnerDetailViewTests(TestCase):
             "event:runner_detail", kwargs={"pk": self.runner.pk}
         )
 
-    def test_login_required(self):
+    def test_login_required(self) -> None:
         res = self.client.get(self.runner_detail_url)
         self.assertNotEquals(res.status_code, 200)
 
 
 class PrivateRunnerDetailViewTests(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = get_user_model().objects.create_user(
             username="testuser",
             password="test123",
@@ -97,7 +97,7 @@ class PrivateRunnerDetailViewTests(TestCase):
             "event:runner_detail", kwargs={"pk": self.runner.pk}
         )
 
-    def test_retrieve_runner_detail(self):
+    def test_retrieve_runner_detail(self) -> None:
         res = self.client.get(self.runner_detail_url)
 
         self.assertEqual(res.status_code, 200)
@@ -110,10 +110,10 @@ class PrivateRunnerDetailViewTests(TestCase):
         self.assertContains(res, "Test")
         self.assertContains(res, "User")
 
-    def test_runner_detail_view_template_used(self):
+    def test_runner_detail_view_template_used(self) -> None:
         response = self.client.get(self.runner_detail_url)
         self.assertTemplateUsed(response, "event/runner_detail.html")
 
-    def test_runner_detail_view_context(self):
+    def test_runner_detail_view_context(self) -> None:
         response = self.client.get(self.runner_detail_url)
         self.assertEqual(response.context["runner"], self.runner)

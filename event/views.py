@@ -21,7 +21,7 @@ class BaseEventListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "events"
     paginate_by = 7
 
-    def get_queryset(self):
+    def get_queryset(self) -> None:
         queryset = Event.objects.all()
         is_active = self.get_is_active()
         if is_active is not None:
@@ -41,7 +41,7 @@ class BaseEventListView(LoginRequiredMixin, generic.ListView):
                 queryset = queryset.filter(location__icontains=location)
         return queryset
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         context["search_form"] = EventSearchForm(self.request.GET)
         context["distances"] = Distance.objects.all()
@@ -49,21 +49,24 @@ class BaseEventListView(LoginRequiredMixin, generic.ListView):
             event.registration_count = event.registrations.count()
         return context
 
-    def get_is_active(self):
+    def get_is_active(self) -> None:
         return True
 
 
 class EventListView(BaseEventListView):
     template_name = "event/index.html"
 
-    def get_queryset(self):
+    def get_queryset(self) -> None:
         queryset = super().get_queryset()
         event_type = self.request.GET.get("event_type")
         if event_type:
             queryset = queryset.filter(event_type=event_type)
-        return queryset.filter(start_datetime__gt=timezone.now(), is_active=True)
+        return queryset.filter(
+            start_datetime__gt=timezone.now(),
+            is_active=True
+        )
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         context["segment"] = "events"
         return context
@@ -72,10 +75,32 @@ class EventListView(BaseEventListView):
 class ArchiveListView(BaseEventListView):
     template_name = "event/archive_list.html"
 
-    def get_is_active(self):
+    def get_is_active(self) -> None:
         return False
 
-    def get_context_data(self, **kwargs):
+    from django.utils import timezone
+
+    class ArchiveListView(BaseEventListView):
+        template_name = "event/archive_list.html"
+
+        def get_queryset(self) -> None:
+            queryset = super().get_queryset()
+            queryset.filter(
+                start_datetime__lte=timezone.now(),
+                is_active=True
+            ).update(is_active=False)
+            queryset.filter(
+                start_datetime__gt=timezone.now(),
+                is_active=False
+            ).update(is_active=True)
+            return queryset.filter(is_active=False)
+
+        def get_context_data(self, **kwargs: dict) -> dict:
+            context = super().get_context_data(**kwargs)
+            context["segment"] = "archive"
+            return context
+
+    def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         context["segment"] = "archive"
         return context
@@ -127,9 +152,8 @@ class RunnerDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
         runner = self.get_object()
-        context["registrations"] = Registration.objects.filter(runner=runner).order_by(
-            "event__start_datetime"
-        )
+        context["registrations"] = Registration.objects.filter(
+            runner=runner).order_by("event__start_datetime")
         return context
 
 
@@ -168,7 +192,8 @@ class EventRegistrationListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self) -> Registration:
         event_id = self.kwargs["pk"]
-        return Registration.objects.filter(event_id=event_id).order_by("distances")
+        return Registration.objects.filter(
+            event_id=event_id).order_by("distances")
 
     def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
