@@ -60,6 +60,7 @@ Follow these steps to set up the project locally:
 
 Below is a simplified representation of the database schema:
 
+![website interface](runner_community.drawio.png)
 ```plaintext
 Runner
 - id (Primary Key)
