@@ -1,0 +1,8 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+  <h1>{{ object|yesno:"Update,Register" }} event</h1>
+  <h2>Choice distance</h2>
+  {% block form %}
+    {% include "includes/form.html" %}
+  {% endblock %}
+{% endblock %}

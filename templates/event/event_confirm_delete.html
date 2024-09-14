@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+  <h1>Delete event</h1>
+  <p>Are you sure you want to delete the event: {{ event }}?</p>
+  <p><i>All Runners with this event will be also deleted!</i></p>
+  <form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Yes, delete" class="btn btn-danger" />
+  </form>
+  <a href="{% url 'event:index' pk=event.id %}" class="btn btn-secondary">Cancel</a>
+{% endblock %}

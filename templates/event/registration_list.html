@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<h1>Registration for the event "{{ event_name }}"</h1>
+    <p>Event date: {{ event_date }}</p>
+    <p>Event type: {{ event_type }}</p>
+    <p>Location: {{ event_location }}</p>
+    <p>Organiser: {{ organiser }}</p>
+
+    <h2>Registration list</h2>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Distance</th>
+                <th>runners full name</th>
+                <th>Age</th>
+                <th>City</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registration in registrations %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ registration.distances }} км</td>
+                    <td>
+                      <a href="{% url 'event:runner_detail' pk=registration.runner.id %}">{{ registration.runner }}</a>
+                    </td>
+                    <td>{{ registration.runner.get_age }}</td>
+                    <td>{{ registration.runner.city }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">Unfortunately, there are currently no registrations for this event.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

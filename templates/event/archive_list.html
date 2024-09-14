@@ -1,0 +1,40 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_filters %}
+{% block content %}
+  <form method="get" action="" class="form-inline">
+    {{ search_form|crispy }}
+    <input type="submit" value="Search" class="btn btn-primary" formnovalidate>
+  </form>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Date race</th>
+        <th>Name race</th>
+        <th>Location</th>
+        <th>Distances</th>
+        <th>Organiser</th>
+        <th>Participants</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in events %}
+        <tr>
+          <td>{{ event.start_datetime|date:"d.m.Y, l" }}</td>
+          <td><a href="{% url 'event:event_detail' pk=event.id %}" class="btn btn-outline-gray-800 btn-custom-width">{{ event.name }}</a></td>
+          <td>{{ event.location }}</td>
+          <td>
+            {% for distance in event.get_distances %}
+              {{ distance }} km{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </td>
+          <td>{{ event.organiser }}</td>
+          <td class="td-participants">
+            <a href="{% url 'event:registration_list' pk=event.id %}" class="btn btn-outline-gray-800">
+              Participants: {{ event.registration_count }}
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
