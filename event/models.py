@@ -9,7 +9,7 @@ class Runner(AbstractUser):
     first_name = models.CharField(max_length=30, blank=False)
     last_name = models.CharField(max_length=30, blank=False)
     city = models.CharField(max_length=30)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(
         max_length=10,
         choices=[
