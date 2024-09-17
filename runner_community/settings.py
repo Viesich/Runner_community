@@ -34,14 +34,14 @@ DEBUG = "RENDER" not in os.environ
 
 ASSETS_ROOT = "/static/assets/"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "event-community.onrender.com"]
 
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
 
-# Application definition
+#  definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -87,7 +87,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "runner_community.wsgi.application"
+WSGI_ = "runner_community.wsgi.application"
 
 
 # Database
