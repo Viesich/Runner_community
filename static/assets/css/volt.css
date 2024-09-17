@@ -14786,6 +14786,16 @@ textarea.form-control-lg {
   overflow-y: auto;
   width: 100%;
   transition: max-width 0.1s; }
+  @media (orientation: landscape) {
+    .sidebar {
+      width: 260px;
+      max-width: 260px;
+    }
+    .content {
+      margin-left: 260px;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .sidebar {
       transition: none; } }
@@ -14880,11 +14890,15 @@ textarea.form-control-lg {
   border-bottom: 0.0625rem solid #2e3650; }
 
 @media (max-width: 575.98px) {
-  .sidebar {
-    width: 100%; } }
+  .sidebar-toggle {
+    overflow: auto;
+    width: 100%;
+    text-align: center;
+  }
+}
 
 .content {
-  overflow: hidden;
+  overflow: auto;
   padding: 0 1rem 0 1rem;
   transition: all 0.3s; }
   @media (prefers-reduced-motion: reduce) {
@@ -14895,11 +14909,35 @@ textarea.form-control-lg {
       margin-left: 260px; } }
 
 .sidebar-toggle {
-  font-size: 1.3rem; }
-  .sidebar-toggle:hover, .sidebar-toggle:focus {
-    outline: none;
-    box-shadow: none;
-    background: #D1D5DB; }
+  display: flex;
+  align-items: center;
+  background-color: #007bff;
+  border: none;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.sidebar-toggle:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+@media (orientation: landscape) {
+  .sidebar-toggle {
+    top: 20px;
+    right: 20px;
+  }
+}
+.sidebar-icon {
+  margin-right: 0.5rem;
+}
+.sidebar-text {
+  display: inline-block;
+}
 
 iframe {
   border: 0; }
