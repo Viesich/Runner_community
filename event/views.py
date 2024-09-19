@@ -21,11 +21,8 @@ class BaseEventListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "events"
     paginate_by = 7
 
-    def get_queryset(self) -> None:
+    def get_queryset(self) -> Event:
         queryset = Event.objects.all()
-        is_active = self.get_is_active()
-        if is_active is not None:
-            queryset = queryset.filter(is_active=is_active)
 
         event_type = self.request.GET.get("event_type")
         if event_type:
@@ -39,7 +36,7 @@ class BaseEventListView(LoginRequiredMixin, generic.ListView):
                 queryset = queryset.filter(name__icontains=name)
             if location:
                 queryset = queryset.filter(location__icontains=location)
-        return queryset
+        return queryset.filter(is_active=True)
 
     def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
@@ -49,14 +46,11 @@ class BaseEventListView(LoginRequiredMixin, generic.ListView):
             event.registration_count = event.registrations.count()
         return context
 
-    def get_is_active(self) -> None:
-        return True
-
 
 class EventListView(BaseEventListView):
     template_name = "event/index.html"
 
-    def get_queryset(self) -> None:
+    def get_queryset(self) -> Event:
         queryset = super().get_queryset()
         event_type = self.request.GET.get("event_type")
         if event_type:
@@ -73,32 +67,12 @@ class EventListView(BaseEventListView):
 
 
 class ArchiveListView(BaseEventListView):
+    model = Event
     template_name = "event/archive_list.html"
+    context_object_name = "events"
 
-    def get_is_active(self) -> None:
-        return False
-
-    from django.utils import timezone
-
-    class ArchiveListView(BaseEventListView):
-        template_name = "event/archive_list.html"
-
-        def get_queryset(self) -> None:
-            queryset = super().get_queryset()
-            queryset.filter(
-                start_datetime__lte=timezone.now(),
-                is_active=True
-            ).update(is_active=False)
-            queryset.filter(
-                start_datetime__gt=timezone.now(),
-                is_active=False
-            ).update(is_active=True)
-            return queryset.filter(is_active=False)
-
-        def get_context_data(self, **kwargs: dict) -> dict:
-            context = super().get_context_data(**kwargs)
-            context["segment"] = "archive"
-            return context
+    def get_queryset(self):
+        return Event.objects.filter(start_datetime__lt=timezone.now())
 
     def get_context_data(self, **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)
