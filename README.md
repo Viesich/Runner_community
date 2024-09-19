@@ -29,6 +29,17 @@ Event Community is a versatile platform designed for organizing and participatin
 * **Environment Management**: Python Virtual Environment (venv)
 * **Version Control**: Git, GitHub
 
+## Check it out!
+[Event Community project deployed to Render](https://event-community.onrender.com/)
+
+Use the login and password of the administrator and the test user for the test site:
+
+login:admin
+password:1qazcde3
+
+login:test_user
+password:1qazcde3
+
 ## Installation Instructions
 
 Follow these steps to set up the project locally:

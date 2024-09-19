@@ -34,14 +34,14 @@ DEBUG = "RENDER" not in os.environ
 
 ASSETS_ROOT = "/static/assets/"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "event-community.onrender.com"]
 
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
 
-# Application definition
+#  definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -87,21 +87,21 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "runner_community.wsgi.application"
+WSGI_ = "runner_community.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=500
+    )
 }
-
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES["default"].update(db_from_env)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
